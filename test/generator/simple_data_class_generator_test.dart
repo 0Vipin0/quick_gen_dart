@@ -31,6 +31,279 @@ void main() {
     toMapTests(className, inputs);
 
     copyWithTests(className, inputs);
+
+    requiredOptionalDataClassTest(className, inputs);
+
+    optionalDataClassTest(className, inputs);
+
+    defaultDataClassTest(className, inputs);
+  });
+}
+
+void requiredOptionalDataClassTest(
+    String className, List<Map<String, String>> inputs) {
+  test("Generate Complete Data Class with Required Optional Constructor", () {
+    final DataClassGenerator dataClassGenerator =
+        DataClassGenerator(className: className, inputs: inputs);
+    const String expectedDataClass = '''
+import 'package:flutter/foundation.dart';
+
+class Temp {
+\tDateTime age;
+\tString id;
+\tint totalUsers;
+\tbool isAdult;
+\tdouble totalAmount;
+\tnum activeUsers;
+
+Temp({
+\t@required this.age,
+\t@required this.id,
+\t@required this.totalUsers,
+\t@required this.isAdult,
+\t@required this.totalAmount,
+\t@required this.activeUsers,
+});
+
+Temp copyWith({
+\tDateTime age,
+\tString id,
+\tint totalUsers,
+\tbool isAdult,
+\tdouble totalAmount,
+\tnum activeUsers,
+}) => Temp(
+\t\tage: age ?? this.age,
+\t\tid: id ?? this.id,
+\t\ttotalUsers: totalUsers ?? this.totalUsers,
+\t\tisAdult: isAdult ?? this.isAdult,
+\t\ttotalAmount: totalAmount ?? this.totalAmount,
+\t\tactiveUsers: activeUsers ?? this.activeUsers,
+\t);
+
+@override
+String toString() {
+\treturn 'Temp{age: \$age, id: \$id, totalUsers: \$totalUsers, isAdult: \$isAdult, totalAmount: \$totalAmount, activeUsers: \$activeUsers}';
+}
+
+@override
+bool operator == (Object other) =>
+\tidentical(this, other) ||
+\t(other is Temp &&
+\truntimeType == other.runtimeType &&
+\tage == other.age &&
+\tid == other.id &&
+\ttotalUsers == other.totalUsers &&
+\tisAdult == other.isAdult &&
+\ttotalAmount == other.totalAmount &&
+\tactiveUsers == other.activeUsers);
+
+@override
+int get hashCode =>
+\tage.hashCode ^
+\tid.hashCode ^
+\ttotalUsers.hashCode ^
+\tisAdult.hashCode ^
+\ttotalAmount.hashCode ^
+\tactiveUsers.hashCode;
+
+factory Temp.fromMap(Map<String, dynamic> map) => Temp(
+\t\tage: map['age'] as DateTime,
+\t\tid: map['id'] as String,
+\t\ttotalUsers: map['totalUsers'] as int,
+\t\tisAdult: map['isAdult'] as bool,
+\t\ttotalAmount: map['totalAmount'] as double,
+\t\tactiveUsers: map['activeUsers'] as num,
+\t);
+
+Map<String, dynamic> toMap() => <String, dynamic>{
+\t\t'age': age,
+\t\t'id': id,
+\t\t'totalUsers': totalUsers,
+\t\t'isAdult': isAdult,
+\t\t'totalAmount': totalAmount,
+\t\t'activeUsers': activeUsers,
+\t};
+}''';
+    final String generatedDataClass =
+        dataClassGenerator.getDataClass(Constructor.REQUIRED_OPTIONAL);
+    expect(generatedDataClass, expectedDataClass);
+  });
+}
+
+void optionalDataClassTest(String className, List<Map<String, String>> inputs) {
+  test("Generate Complete Data Class with Optional Constructor", () {
+    final DataClassGenerator dataClassGenerator =
+        DataClassGenerator(className: className, inputs: inputs);
+    const String expectedDataClass = '''
+class Temp {
+\tDateTime age;
+\tString id;
+\tint totalUsers;
+\tbool isAdult;
+\tdouble totalAmount;
+\tnum activeUsers;
+
+Temp({
+\tthis.age,
+\tthis.id,
+\tthis.totalUsers,
+\tthis.isAdult,
+\tthis.totalAmount,
+\tthis.activeUsers,
+});
+
+Temp copyWith({
+\tDateTime age,
+\tString id,
+\tint totalUsers,
+\tbool isAdult,
+\tdouble totalAmount,
+\tnum activeUsers,
+}) => Temp(
+\t\tage: age ?? this.age,
+\t\tid: id ?? this.id,
+\t\ttotalUsers: totalUsers ?? this.totalUsers,
+\t\tisAdult: isAdult ?? this.isAdult,
+\t\ttotalAmount: totalAmount ?? this.totalAmount,
+\t\tactiveUsers: activeUsers ?? this.activeUsers,
+\t);
+
+@override
+String toString() {
+\treturn 'Temp{age: \$age, id: \$id, totalUsers: \$totalUsers, isAdult: \$isAdult, totalAmount: \$totalAmount, activeUsers: \$activeUsers}';
+}
+
+@override
+bool operator == (Object other) =>
+\tidentical(this, other) ||
+\t(other is Temp &&
+\truntimeType == other.runtimeType &&
+\tage == other.age &&
+\tid == other.id &&
+\ttotalUsers == other.totalUsers &&
+\tisAdult == other.isAdult &&
+\ttotalAmount == other.totalAmount &&
+\tactiveUsers == other.activeUsers);
+
+@override
+int get hashCode =>
+\tage.hashCode ^
+\tid.hashCode ^
+\ttotalUsers.hashCode ^
+\tisAdult.hashCode ^
+\ttotalAmount.hashCode ^
+\tactiveUsers.hashCode;
+
+factory Temp.fromMap(Map<String, dynamic> map) => Temp(
+\t\tage: map['age'] as DateTime,
+\t\tid: map['id'] as String,
+\t\ttotalUsers: map['totalUsers'] as int,
+\t\tisAdult: map['isAdult'] as bool,
+\t\ttotalAmount: map['totalAmount'] as double,
+\t\tactiveUsers: map['activeUsers'] as num,
+\t);
+
+Map<String, dynamic> toMap() => <String, dynamic>{
+\t\t'age': age,
+\t\t'id': id,
+\t\t'totalUsers': totalUsers,
+\t\t'isAdult': isAdult,
+\t\t'totalAmount': totalAmount,
+\t\t'activeUsers': activeUsers,
+\t};
+}''';
+    final String generatedDataClass =
+        dataClassGenerator.getDataClass(Constructor.OPTIONAL);
+    expect(generatedDataClass, expectedDataClass);
+  });
+}
+
+void defaultDataClassTest(String className, List<Map<String, String>> inputs) {
+  test("Generate Complete Data Class with Default Constructor", () {
+    final DataClassGenerator dataClassGenerator =
+        DataClassGenerator(className: className, inputs: inputs);
+    const String expectedDataClass = '''
+class Temp {
+\tDateTime age;
+\tString id;
+\tint totalUsers;
+\tbool isAdult;
+\tdouble totalAmount;
+\tnum activeUsers;
+
+Temp(
+\tthis.age,
+\tthis.id,
+\tthis.totalUsers,
+\tthis.isAdult,
+\tthis.totalAmount,
+\tthis.activeUsers,
+);
+
+Temp copyWith({
+\tDateTime age,
+\tString id,
+\tint totalUsers,
+\tbool isAdult,
+\tdouble totalAmount,
+\tnum activeUsers,
+}) => Temp(
+\t\tage: age ?? this.age,
+\t\tid: id ?? this.id,
+\t\ttotalUsers: totalUsers ?? this.totalUsers,
+\t\tisAdult: isAdult ?? this.isAdult,
+\t\ttotalAmount: totalAmount ?? this.totalAmount,
+\t\tactiveUsers: activeUsers ?? this.activeUsers,
+\t);
+
+@override
+String toString() {
+\treturn 'Temp{age: \$age, id: \$id, totalUsers: \$totalUsers, isAdult: \$isAdult, totalAmount: \$totalAmount, activeUsers: \$activeUsers}';
+}
+
+@override
+bool operator == (Object other) =>
+\tidentical(this, other) ||
+\t(other is Temp &&
+\truntimeType == other.runtimeType &&
+\tage == other.age &&
+\tid == other.id &&
+\ttotalUsers == other.totalUsers &&
+\tisAdult == other.isAdult &&
+\ttotalAmount == other.totalAmount &&
+\tactiveUsers == other.activeUsers);
+
+@override
+int get hashCode =>
+\tage.hashCode ^
+\tid.hashCode ^
+\ttotalUsers.hashCode ^
+\tisAdult.hashCode ^
+\ttotalAmount.hashCode ^
+\tactiveUsers.hashCode;
+
+factory Temp.fromMap(Map<String, dynamic> map) => Temp(
+\t\tage: map['age'] as DateTime,
+\t\tid: map['id'] as String,
+\t\ttotalUsers: map['totalUsers'] as int,
+\t\tisAdult: map['isAdult'] as bool,
+\t\ttotalAmount: map['totalAmount'] as double,
+\t\tactiveUsers: map['activeUsers'] as num,
+\t);
+
+Map<String, dynamic> toMap() => <String, dynamic>{
+\t\t'age': age,
+\t\t'id': id,
+\t\t'totalUsers': totalUsers,
+\t\t'isAdult': isAdult,
+\t\t'totalAmount': totalAmount,
+\t\t'activeUsers': activeUsers,
+\t};
+}''';
+    final String generatedDataClass =
+        dataClassGenerator.getDataClass(Constructor.DEFAULT);
+    expect(generatedDataClass, expectedDataClass);
   });
 }
 
@@ -332,3 +605,82 @@ String toString() {
     });
   });
 }
+
+// class Temp {
+//   DateTime age;
+//   String id;
+//   int totalUsers;
+//   bool isAdult;
+//   double totalAmount;
+//   num activeUsers;
+//
+//   Temp({
+//     @required this.age,
+//     @required this.id,
+//     @required this.totalUsers,
+//     @required this.isAdult,
+//     @required this.totalAmount,
+//     @required this.activeUsers,
+//   });
+//
+//   Temp copyWith({
+//     DateTime age,
+//     String id,
+//     int totalUsers,
+//     bool isAdult,
+//     double totalAmount,
+//     num activeUsers,
+//   }) =>
+//       Temp(
+//         age: age ?? this.age,
+//         id: id ?? this.id,
+//         totalUsers: totalUsers ?? this.totalUsers,
+//         isAdult: isAdult ?? this.isAdult,
+//         totalAmount: totalAmount ?? this.totalAmount,
+//         activeUsers: activeUsers ?? this.activeUsers,
+//       );
+//
+//   @override
+//   String toString() {
+//     return 'Temp{age: $age, id: $id, totalUsers: $totalUsers, isAdult: $isAdult, totalAmount: $totalAmount, activeUsers: $activeUsers}';
+//   }
+//
+//   @override
+//   bool operator ==(Object other) =>
+//       identical(this, other) ||
+//       (other is Temp &&
+//           runtimeType == other.runtimeType &&
+//           age == other.age &&
+//           id == other.id &&
+//           totalUsers == other.totalUsers &&
+//           isAdult == other.isAdult &&
+//           totalAmount == other.totalAmount &&
+//           activeUsers == other.activeUsers);
+//
+//   @override
+//   int get hashCode =>
+//       age.hashCode ^
+//       id.hashCode ^
+//       totalUsers.hashCode ^
+//       isAdult.hashCode ^
+//       totalAmount.hashCode ^
+//       activeUsers.hashCode;
+//
+//   factory Temp.fromMap(Map<String, dynamic> map) => Temp(
+//         age: map['age'] as DateTime,
+//         id: map['id'] as String,
+//         totalUsers: map['totalUsers'] as int,
+//         isAdult: map['isAdult'] as bool,
+//         totalAmount: map['totalAmount'] as double,
+//         activeUsers: map['activeUsers'] as num,
+//       );
+//
+//   Map<String, dynamic> toMap() => <String, dynamic>{
+//         'age': age,
+//         'id': id,
+//         'totalUsers': totalUsers,
+//         'isAdult': isAdult,
+//         'totalAmount': totalAmount,
+//         'activeUsers': activeUsers,
+//       };
+// }

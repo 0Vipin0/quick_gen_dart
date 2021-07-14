@@ -271,4 +271,46 @@ class DataClassGenerator {
     }
     return Templates.toFromMapTemplate(className: className, content: "");
   }
+
+  String getVariables() {
+    final StringBuffer contentBuffer = StringBuffer();
+    for (int i = 0; i < inputs.length; i++) {
+      final String? variableName = inputs[i][VARIABLE_NAME];
+      final String? variableType = inputs[i][VARIABLE_TYPE];
+      contentBuffer.write(ExpressionHelpers
+          .getColonSeparatedVariableStartingWithTabEndingWithSemicolon(
+        variableName: variableName ?? "",
+        variableType: variableType ?? "",
+      ));
+    }
+    return contentBuffer.toString();
+  }
+
+  String getDataClass(Constructor constructor) {
+    if (inputs.isNotEmpty) {
+      final StringBuffer contentBuffer = StringBuffer();
+      if (constructor == Constructor.REQUIRED_OPTIONAL) {
+        contentBuffer.write("import 'package:flutter/foundation.dart';\n\n");
+      }
+      contentBuffer.write("class $className {\n");
+      contentBuffer.write(getVariables());
+      contentBuffer.write("\n");
+      contentBuffer.write(_getConstructor(constructor));
+      contentBuffer.write("\n\n");
+      contentBuffer.write(getCopyWith());
+      contentBuffer.write("\n\n");
+      contentBuffer.write(getToString());
+      contentBuffer.write("\n\n");
+      contentBuffer.write(getEquality());
+      contentBuffer.write("\n\n");
+      contentBuffer.write(getHashCode());
+      contentBuffer.write("\n\n");
+      contentBuffer.write(getFromMap());
+      contentBuffer.write("\n\n");
+      contentBuffer.write(getToMap());
+      contentBuffer.write("\n}");
+      return contentBuffer.toString();
+    }
+    return "";
+  }
 }

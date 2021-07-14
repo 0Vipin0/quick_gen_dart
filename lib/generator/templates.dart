@@ -46,9 +46,10 @@ ${shouldAddConst ? "const " : ""}$className($content);''';
     required String className,
     required String content,
     required String parameters,
+    required bool shouldAddConst,
   }) {
     return '''
-$className copyWith($parameters) => $className($content);''';
+$className copyWith($parameters) => ${shouldAddConst ? "const " : ""}$className($content);''';
   }
 
   static String toMapTemplate({required String content}) {
@@ -56,9 +57,12 @@ $className copyWith($parameters) => $className($content);''';
 Map<String, dynamic> toMap() => <String, dynamic>{$content};''';
   }
 
-  static String toFromMapTemplate(
-      {required String className, required String content}) {
+  static String toFromMapTemplate({
+    required String className,
+    required String content,
+    required bool shouldAddConst,
+  }) {
     return '''
-factory $className.fromMap(Map<String, dynamic> map) => $className($content);''';
+factory $className.fromMap(${!shouldAddConst ? "Map<String, dynamic> map" : ""}) => ${shouldAddConst ? "const " : ""}$className($content);''';
   }
 }

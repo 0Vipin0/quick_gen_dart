@@ -148,10 +148,15 @@ class DataClassGenerator {
         className: className,
         content: _generateCopyWithContent(),
         parameters: _generateCopyWithParameters(),
+        shouldAddConst: false,
       );
     }
     return Templates.toCopyWithTemplate(
-        className: className, content: "", parameters: "");
+      className: className,
+      content: "",
+      parameters: "",
+      shouldAddConst: true,
+    );
   }
 
   String _generateCopyWithParameters() {
@@ -267,9 +272,14 @@ class DataClassGenerator {
       return Templates.toFromMapTemplate(
         className: className,
         content: contentBuffer.toString(),
+        shouldAddConst: false,
       );
     }
-    return Templates.toFromMapTemplate(className: className, content: "");
+    return Templates.toFromMapTemplate(
+      className: className,
+      content: "",
+      shouldAddConst: true,
+    );
   }
 
   String getVariables() {
@@ -287,30 +297,27 @@ class DataClassGenerator {
   }
 
   String getDataClass(Constructor constructor) {
-    if (inputs.isNotEmpty) {
-      final StringBuffer contentBuffer = StringBuffer();
-      if (constructor == Constructor.REQUIRED_OPTIONAL) {
-        contentBuffer.write("import 'package:flutter/foundation.dart';\n\n");
-      }
-      contentBuffer.write("class $className {\n");
-      contentBuffer.write(getVariables());
-      contentBuffer.write("\n");
-      contentBuffer.write(_getConstructor(constructor));
-      contentBuffer.write("\n\n");
-      contentBuffer.write(getCopyWith());
-      contentBuffer.write("\n\n");
-      contentBuffer.write(getToString());
-      contentBuffer.write("\n\n");
-      contentBuffer.write(getEquality());
-      contentBuffer.write("\n\n");
-      contentBuffer.write(getHashCode());
-      contentBuffer.write("\n\n");
-      contentBuffer.write(getFromMap());
-      contentBuffer.write("\n\n");
-      contentBuffer.write(getToMap());
-      contentBuffer.write("\n}");
-      return contentBuffer.toString();
+    final StringBuffer contentBuffer = StringBuffer();
+    if (constructor == Constructor.REQUIRED_OPTIONAL && inputs.isNotEmpty) {
+      contentBuffer.write("import 'package:flutter/foundation.dart';\n\n");
     }
-    return "";
+    contentBuffer.write("class $className {\n");
+    contentBuffer.write(getVariables());
+    contentBuffer.write("\n");
+    contentBuffer.write(_getConstructor(constructor));
+    contentBuffer.write("\n\n");
+    contentBuffer.write(getCopyWith());
+    contentBuffer.write("\n\n");
+    contentBuffer.write(getToString());
+    contentBuffer.write("\n\n");
+    contentBuffer.write(getEquality());
+    contentBuffer.write("\n\n");
+    contentBuffer.write(getHashCode());
+    contentBuffer.write("\n\n");
+    contentBuffer.write(getFromMap());
+    contentBuffer.write("\n\n");
+    contentBuffer.write(getToMap());
+    contentBuffer.write("\n}");
+    return contentBuffer.toString();
   }
 }

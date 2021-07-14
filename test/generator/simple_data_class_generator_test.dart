@@ -32,6 +32,39 @@ void main() {
 
     copyWithTests(className, inputs);
 
+    test("Empty Data Class", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: []);
+      const String expectedDataClass = '''
+class Temp {
+
+const Temp();
+
+Temp copyWith() => const Temp();
+
+@override
+String toString() {
+\treturn 'Temp{}';
+}
+
+@override
+bool operator == (Object other) =>
+\tidentical(this, other) ||
+\t(other is Temp &&
+\truntimeType == other.runtimeType);
+
+@override
+int get hashCode => 0;
+
+factory Temp.fromMap() => const Temp();
+
+Map<String, dynamic> toMap() => <String, dynamic>{};
+}''';
+      final String generatedDataClass =
+          dataClassGenerator.getDataClass(Constructor.DEFAULT);
+      expect(generatedDataClass, expectedDataClass);
+    });
+
     requiredOptionalDataClassTest(className, inputs);
 
     optionalDataClassTest(className, inputs);
@@ -313,7 +346,7 @@ void fromMapTests(String className, List<Map<String, String>> inputs) {
       final DataClassGenerator dataClassGenerator =
           DataClassGenerator(className: className, inputs: []);
       const String expectedFromMap = '''
-factory Temp.fromMap(Map<String, dynamic> map) => Temp();''';
+factory Temp.fromMap() => const Temp();''';
       final String generatedFromMap = dataClassGenerator.getFromMap();
       expect(generatedFromMap, expectedFromMap);
     });
@@ -371,7 +404,7 @@ void copyWithTests(String className, List<Map<String, String>> inputs) {
       final DataClassGenerator dataClassGenerator =
           DataClassGenerator(className: className, inputs: []);
       const String expectedCopyWith = '''
-Temp copyWith() => Temp();''';
+Temp copyWith() => const Temp();''';
       final String generatedCopyWith = dataClassGenerator.getCopyWith();
       expect(generatedCopyWith, expectedCopyWith);
     });
@@ -605,82 +638,3 @@ String toString() {
     });
   });
 }
-
-// class Temp {
-//   DateTime age;
-//   String id;
-//   int totalUsers;
-//   bool isAdult;
-//   double totalAmount;
-//   num activeUsers;
-//
-//   Temp({
-//     @required this.age,
-//     @required this.id,
-//     @required this.totalUsers,
-//     @required this.isAdult,
-//     @required this.totalAmount,
-//     @required this.activeUsers,
-//   });
-//
-//   Temp copyWith({
-//     DateTime age,
-//     String id,
-//     int totalUsers,
-//     bool isAdult,
-//     double totalAmount,
-//     num activeUsers,
-//   }) =>
-//       Temp(
-//         age: age ?? this.age,
-//         id: id ?? this.id,
-//         totalUsers: totalUsers ?? this.totalUsers,
-//         isAdult: isAdult ?? this.isAdult,
-//         totalAmount: totalAmount ?? this.totalAmount,
-//         activeUsers: activeUsers ?? this.activeUsers,
-//       );
-//
-//   @override
-//   String toString() {
-//     return 'Temp{age: $age, id: $id, totalUsers: $totalUsers, isAdult: $isAdult, totalAmount: $totalAmount, activeUsers: $activeUsers}';
-//   }
-//
-//   @override
-//   bool operator ==(Object other) =>
-//       identical(this, other) ||
-//       (other is Temp &&
-//           runtimeType == other.runtimeType &&
-//           age == other.age &&
-//           id == other.id &&
-//           totalUsers == other.totalUsers &&
-//           isAdult == other.isAdult &&
-//           totalAmount == other.totalAmount &&
-//           activeUsers == other.activeUsers);
-//
-//   @override
-//   int get hashCode =>
-//       age.hashCode ^
-//       id.hashCode ^
-//       totalUsers.hashCode ^
-//       isAdult.hashCode ^
-//       totalAmount.hashCode ^
-//       activeUsers.hashCode;
-//
-//   factory Temp.fromMap(Map<String, dynamic> map) => Temp(
-//         age: map['age'] as DateTime,
-//         id: map['id'] as String,
-//         totalUsers: map['totalUsers'] as int,
-//         isAdult: map['isAdult'] as bool,
-//         totalAmount: map['totalAmount'] as double,
-//         activeUsers: map['activeUsers'] as num,
-//       );
-//
-//   Map<String, dynamic> toMap() => <String, dynamic>{
-//         'age': age,
-//         'id': id,
-//         'totalUsers': totalUsers,
-//         'isAdult': isAdult,
-//         'totalAmount': totalAmount,
-//         'activeUsers': activeUsers,
-//       };
-// }

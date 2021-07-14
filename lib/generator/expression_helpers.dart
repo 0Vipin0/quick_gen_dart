@@ -7,4 +7,13 @@ class ExpressionHelpers {
       {required String variableName}) {
     return "$variableName: \$$variableName, ";
   }
+
+  static String getEqualitySeparatedVariable({required String variableName}) {
+    return "  $variableName == other.$variableName";
+  }
+
+  static String getEqualitySeparatedVariableWithAnd(
+      {required String variableName}) {
+    return "  $variableName == other.$variableName &&\n";
+  }
 }

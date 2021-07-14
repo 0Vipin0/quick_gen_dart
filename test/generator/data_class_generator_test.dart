@@ -14,53 +14,9 @@ void main() {
       {VARIABLE_NAME: "activeUsers", VARIABLE_TYPE: "num"},
     ];
 
-    group("toString Tests", () {
-      test("Empty toString Test", () {
-        final DataClassGenerator dataClassGenerator =
-            DataClassGenerator(className: className, inputs: []);
-        const String expectedToString = '''
-@override
-String toString() {
-  return 'Temp{}';
-}
-''';
-        final String generatedToString = dataClassGenerator.getToString();
+    toStringTests(className, inputs);
 
-        expect(expectedToString, generatedToString);
-      });
-
-      test("Simple toString Test", () {
-        final DataClassGenerator dataClassGenerator = DataClassGenerator(
-          className: className,
-          inputs: inputs,
-        );
-        const String expectedToString = '''
-@override
-String toString() {
-  return 'Temp{age: \$age, id: \$id, totalUsers: \$totalUsers, isAdult: \$isAdult, totalAmount: \$totalAmount, activeUsers: \$activeUsers}';
-}
-''';
-        final String generatedToString = dataClassGenerator.getToString();
-
-        expect(expectedToString, generatedToString);
-      });
-    });
-
-    test("equality Test", () {
-      const String expectedEquality = '''
-@override
-bool operator ==(Object other) =>
-  identical(this, other) ||
-  (other is Temp &&
-  runtimeType == other.runtimeType &&
-  id == other.id &&
-  age == other.age &&
-  totalUsers == other.totalUsers &&
-  isAdult == other.isAdult &&
-  totalAmount == other.totalAmount &&
-  activeUsers == other.activeUsers);      
-''';
-    });
+    equalityTests(className, inputs);
 
     test("fromMap Test", () {
       const String expectedFromMap = '''
@@ -110,6 +66,74 @@ Temp copyWith({
     activeUsers: activeUsers ?? this.activeUsers,
   );
 ''';
+    });
+  });
+}
+
+void equalityTests(String className, List<Map<String, String>> inputs) {
+  return group("Equality Tests", () {
+    test("Empty equality Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: []);
+      const String expectedEquality = '''
+@override
+bool operator == (Object other) =>
+identical(this, other) ||
+(other is Temp &&
+runtimeType == other.runtimeType);''';
+      final generatedEquality = dataClassGenerator.getEquality();
+      expect(expectedEquality, generatedEquality);
+    });
+
+    test("equality Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: inputs);
+      const String expectedEquality = '''
+@override
+bool operator == (Object other) =>
+identical(this, other) ||
+(other is Temp &&
+runtimeType == other.runtimeType &&
+age == other.age &&
+id == other.id &&
+totalUsers == other.totalUsers &&
+isAdult == other.isAdult &&
+totalAmount == other.totalAmount &&
+activeUsers == other.activeUsers);''';
+      final generatedEquality = dataClassGenerator.getEquality();
+      expect(expectedEquality, generatedEquality);
+    });
+  });
+}
+
+void toStringTests(String className, List<Map<String, String>> inputs) {
+  return group("toString Tests", () {
+    test("Empty toString Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: []);
+      const String expectedToString = '''
+@override
+String toString() {
+  return 'Temp{}';
+}''';
+      final String generatedToString = dataClassGenerator.getToString();
+
+      expect(expectedToString, generatedToString);
+    });
+
+    test("Simple toString Test", () {
+      final DataClassGenerator dataClassGenerator = DataClassGenerator(
+        className: className,
+        inputs: inputs,
+      );
+      const String expectedToString = '''
+@override
+String toString() {
+  return 'Temp{age: \$age, id: \$id, totalUsers: \$totalUsers, isAdult: \$isAdult, totalAmount: \$totalAmount, activeUsers: \$activeUsers}';
+}''';
+      final String generatedToString = dataClassGenerator.getToString();
+
+      expect(expectedToString, generatedToString);
     });
   });
 }

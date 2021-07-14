@@ -9,6 +9,18 @@ class Templates {
 $OVERRIDE
 String toString() {
   return '$className{$content}';
-}\n''';
+}''';
+  }
+
+  static String toEqualityTemplate({
+    required String className,
+    required String content,
+  }) {
+    return '''
+$OVERRIDE
+bool operator == (Object other) =>
+  identical(this, other) ||
+  (other is Temp &&
+  runtimeType == other.runtimeType$content);''';
   }
 }

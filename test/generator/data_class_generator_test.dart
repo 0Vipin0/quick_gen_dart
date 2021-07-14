@@ -20,33 +20,36 @@ void main() {
 
     hashCodeTests(className, inputs);
 
-    group("Default Constructor Tests", () {
-      test("Empty Constructor Test", () {
+    defaultConstructorTests(className, inputs);
+
+    group("Optional Constructor Tests", () {
+      test("Empty Optional Constructor Test", () {
         final DataClassGenerator dataClassGenerator =
             DataClassGenerator(className: className, inputs: []);
         const String expectedDefaultConstructor = '''
 const Temp();''';
 
-        final String generatedDefaultConstructor =
-            dataClassGenerator.getDefaultConstructor();
-        expect(generatedDefaultConstructor, expectedDefaultConstructor);
+        final String generatedOptionalConstructor =
+            dataClassGenerator.getOptionalConstructor();
+        expect(generatedOptionalConstructor, expectedDefaultConstructor);
       });
 
-      test("Default Constructor Test", () {
+      test("Optional Constructor Test", () {
         final DataClassGenerator dataClassGenerator =
             DataClassGenerator(className: className, inputs: inputs);
         const String expectedDefaultConstructor = '''
-Temp(
+Temp({
 \tthis.age,
 \tthis.id,
 \tthis.totalUsers,
 \tthis.isAdult,
 \tthis.totalAmount,
 \tthis.activeUsers,
-);''';
-        final String generatedDefaultConstructor =
-            dataClassGenerator.getDefaultConstructor();
-        expect(generatedDefaultConstructor, expectedDefaultConstructor);
+});''';
+
+        final String generatedOptionalConstructor =
+            dataClassGenerator.getOptionalConstructor();
+        expect(generatedOptionalConstructor, expectedDefaultConstructor);
       });
     });
 
@@ -99,6 +102,39 @@ Temp(
 //   );
 // ''';
 //     });
+  });
+}
+
+void defaultConstructorTests(
+    String className, List<Map<String, String>> inputs) {
+  group("Default Constructor Tests", () {
+    test("Empty Constructor Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: []);
+      const String expectedDefaultConstructor = '''
+const Temp();''';
+
+      final String generatedDefaultConstructor =
+          dataClassGenerator.getDefaultConstructor();
+      expect(generatedDefaultConstructor, expectedDefaultConstructor);
+    });
+
+    test("Default Constructor Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: inputs);
+      const String expectedDefaultConstructor = '''
+Temp(
+\tthis.age,
+\tthis.id,
+\tthis.totalUsers,
+\tthis.isAdult,
+\tthis.totalAmount,
+\tthis.activeUsers,
+);''';
+      final String generatedDefaultConstructor =
+          dataClassGenerator.getDefaultConstructor();
+      expect(generatedDefaultConstructor, expectedDefaultConstructor);
+    });
   });
 }
 

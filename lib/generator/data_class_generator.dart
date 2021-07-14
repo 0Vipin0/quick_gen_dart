@@ -2,6 +2,12 @@ import 'package:quick_gen_dart/generator/constants.dart';
 import 'package:quick_gen_dart/generator/expression_helpers.dart';
 import 'package:quick_gen_dart/generator/templates.dart';
 
+enum Constructor {
+  DEFAULT,
+  OPTIONAL,
+  REQUIRED_OPTIONAL,
+}
+
 class DataClassGenerator {
   String className;
   List<Map<String, String>> inputs;
@@ -116,10 +122,8 @@ class DataClassGenerator {
   String getDefaultConstructor() {
     return _getConstructor(Constructor.DEFAULT);
   }
-}
 
-enum Constructor {
-  DEFAULT,
-  OPTIONAL,
-  REQUIRED_OPTIONAL,
+  String getOptionalConstructor() {
+    return _getConstructor(Constructor.OPTIONAL);
+  }
 }

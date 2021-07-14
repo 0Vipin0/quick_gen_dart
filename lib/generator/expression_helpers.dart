@@ -34,7 +34,7 @@ class ExpressionHelpers {
     );
   }
 
-  static String getEqualitySeparatedVariableWithAnd(
+  static String getEqualitySeparatedVariableEndingWithAnd(
       {required String variableName}) {
     return _checkVariableNameEmpty(
       variableName: variableName,
@@ -42,7 +42,7 @@ class ExpressionHelpers {
     );
   }
 
-  static String getHashCodeSeparatedVariableWithAnd(
+  static String getHashCodeSeparatedVariableEndingWithAnd(
       {required String variableName}) {
     return _checkVariableNameEmpty(
       variableName: variableName,
@@ -57,14 +57,15 @@ class ExpressionHelpers {
     );
   }
 
-  static String getDefaultConstructorWithComma({required String variableName}) {
+  static String getDefaultConstructorEndingWithComma(
+      {required String variableName}) {
     return _checkVariableNameEmpty(
       variableName: variableName,
       notEmptyValue: "\tthis.$variableName,\n",
     );
   }
 
-  static String getRequiredConstructorWithComma(
+  static String getRequiredConstructorEndingWithComma(
       {required String variableName}) {
     return _checkVariableNameEmpty(
       variableName: variableName,
@@ -72,7 +73,7 @@ class ExpressionHelpers {
     );
   }
 
-  static String getTypeSeparatedVariableWithComma(
+  static String getTypeSeparatedVariableEndingWithComma(
       {required String variableName, required String variableType}) {
     return _checkVariableNameAndTypeEmpty(
       variableName: variableName,
@@ -81,12 +82,20 @@ class ExpressionHelpers {
     );
   }
 
-  static String getColonSeparatedVariableWithCommaAndNull(
+  static String getColonSeparatedVariableEndingWithCommaAndNull(
       {required String variableName}) {
     return _checkVariableNameEmpty(
       variableName: variableName,
       notEmptyValue:
           "\t\t$variableName: $variableName ?? this.$variableName,\n",
+    );
+  }
+
+  static String getColonSeparatedVariableStartingWithTabEndingWithComma(
+      {required String variableName}) {
+    return _checkVariableNameEmpty(
+      variableName: variableName,
+      notEmptyValue: "\t\t'$variableName': this.$variableName,\n",
     );
   }
 }

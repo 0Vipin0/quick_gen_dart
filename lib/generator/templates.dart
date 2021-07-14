@@ -50,4 +50,9 @@ ${shouldAddConst ? "const " : ""}$className($content);''';
     return '''
 $className copyWith($parameters) => $className($content);''';
   }
+
+  static String toMapTemplate({required String content}) {
+    return '''
+Map<String, dynamic> toMap() => <String, dynamic>{$content};''';
+  }
 }

@@ -55,8 +55,9 @@ class DataClassGenerator {
 
     for (int i = 0; i < inputs.length - 1; i++) {
       final String? variableName = inputs[i][VARIABLE_NAME];
-      contentBuffer.write(ExpressionHelpers.getEqualitySeparatedVariableWithAnd(
-          variableName: variableName ?? ""));
+      contentBuffer.write(
+          ExpressionHelpers.getEqualitySeparatedVariableEndingWithAnd(
+              variableName: variableName ?? ""));
     }
 
     final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
@@ -78,8 +79,9 @@ class DataClassGenerator {
     contentBuffer.write("\n");
     for (int i = 0; i < inputs.length - 1; i++) {
       final String? variableName = inputs[i][VARIABLE_NAME];
-      contentBuffer.write(ExpressionHelpers.getHashCodeSeparatedVariableWithAnd(
-          variableName: variableName ?? ""));
+      contentBuffer.write(
+          ExpressionHelpers.getHashCodeSeparatedVariableEndingWithAnd(
+              variableName: variableName ?? ""));
     }
     final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
     contentBuffer.write(ExpressionHelpers.getHashCodeSeparatedVariable(
@@ -109,11 +111,13 @@ class DataClassGenerator {
     for (int i = 0; i < inputs.length; i++) {
       final String? variableName = inputs[i][VARIABLE_NAME];
       if (constructor == Constructor.REQUIRED_OPTIONAL) {
-        contentBuffer.write(ExpressionHelpers.getRequiredConstructorWithComma(
-            variableName: variableName ?? ""));
+        contentBuffer.write(
+            ExpressionHelpers.getRequiredConstructorEndingWithComma(
+                variableName: variableName ?? ""));
       } else {
-        contentBuffer.write(ExpressionHelpers.getDefaultConstructorWithComma(
-            variableName: variableName ?? ""));
+        contentBuffer.write(
+            ExpressionHelpers.getDefaultConstructorEndingWithComma(
+                variableName: variableName ?? ""));
       }
     }
     if (constructor != Constructor.DEFAULT) {
@@ -147,7 +151,7 @@ class DataClassGenerator {
         final String? variableName = inputs[i][VARIABLE_NAME];
         final String? variableType = inputs[i][VARIABLE_TYPE];
         parameterBuffer
-            .write(ExpressionHelpers.getTypeSeparatedVariableWithComma(
+            .write(ExpressionHelpers.getTypeSeparatedVariableEndingWithComma(
           variableName: variableName ?? "",
           variableType: variableType ?? "",
         ));
@@ -156,8 +160,8 @@ class DataClassGenerator {
       contentBuffer.write("\n");
       for (int i = 0; i < inputs.length; i++) {
         final String? variableName = inputs[i][VARIABLE_NAME];
-        contentBuffer
-            .write(ExpressionHelpers.getColonSeparatedVariableWithCommaAndNull(
+        contentBuffer.write(
+            ExpressionHelpers.getColonSeparatedVariableEndingWithCommaAndNull(
           variableName: variableName ?? "",
         ));
       }
@@ -170,5 +174,24 @@ class DataClassGenerator {
     }
     return Templates.toCopyWithTemplate(
         className: className, content: "", parameters: "");
+  }
+
+  String getToMap() {
+    if (inputs.isNotEmpty) {
+      final StringBuffer contentBuffer = StringBuffer();
+      contentBuffer.write("\n");
+      for (int i = 0; i < inputs.length; i++) {
+        final String? variableName = inputs[i][VARIABLE_NAME];
+        contentBuffer.write(ExpressionHelpers
+            .getColonSeparatedVariableStartingWithTabEndingWithComma(
+          variableName: variableName ?? "",
+        ));
+      }
+      contentBuffer.write("\t");
+      return Templates.toMapTemplate(
+        content: contentBuffer.toString(),
+      );
+    }
+    return Templates.toMapTemplate(content: "");
   }
 }

@@ -40,27 +40,49 @@ void main() {
 //  }
 // ''';
 //     });
-//
-//     test("toMap Test", () {
-//       const String expectedToMap = '''
-// Map<String, dynamic> toMap() {
-//   return <String, dynamic>{
-//     'id': this.id,
-//     'age': this.age,
-//     'totalUsers': this.totalUsers,
-//     'isAdult': this.isAdult,
-//     'totalAmount': this.totalAmount,
-//     'activeUsers': this.activeUsers,
-//   };
-// }
-// ''';
-//     });
-//
+
+    toMapTests(className, inputs);
+
+    copyWithTests(className, inputs);
+  });
+}
+
+void toMapTests(String className, List<Map<String, String>> inputs) {
+  group("toMap Tests", () {
+    test("Empty toMap Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: []);
+      const String expectedToMap = '''
+  Map<String, dynamic> toMap() => <String, dynamic>{};''';
+      final String generatedToMap = dataClassGenerator.getToMap();
+      expect(generatedToMap, expectedToMap);
+    });
+
+    test("toMap Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: inputs);
+      const String expectedToMap = '''
+  Map<String, dynamic> toMap() => <String, dynamic>{
+  \t\t'age': this.age,
+  \t\t'id': this.id,
+  \t\t'totalUsers': this.totalUsers,
+  \t\t'isAdult': this.isAdult,
+  \t\t'totalAmount': this.totalAmount,
+  \t\t'activeUsers': this.activeUsers,
+  \t};''';
+      final String generatedToMap = dataClassGenerator.getToMap();
+      expect(generatedToMap, expectedToMap);
+    });
+  });
+}
+
+void copyWithTests(String className, List<Map<String, String>> inputs) {
+  group("copyWith Tests", () {
     test("Empty copyWith Test", () {
       final DataClassGenerator dataClassGenerator =
           DataClassGenerator(className: className, inputs: []);
       const String expectedCopyWith = '''
-Temp copyWith() => Temp();''';
+  Temp copyWith() => Temp();''';
       final String generatedCopyWith = dataClassGenerator.getCopyWith();
       expect(generatedCopyWith, expectedCopyWith);
     });

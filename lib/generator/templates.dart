@@ -33,12 +33,21 @@ $OVERRIDE
 int get hashCode =>$content;''';
   }
 
-  static String toConstructor({
+  static String toConstructorTemplate({
     required String className,
     required String content,
     required bool shouldAddConst,
   }) {
     return '''
 ${shouldAddConst ? "const " : ""}$className($content);''';
+  }
+
+  static String toCopyWithTemplate({
+    required String className,
+    required String content,
+    required String parameters,
+  }) {
+    return '''
+$className copyWith($parameters) => $className($content);''';
   }
 }

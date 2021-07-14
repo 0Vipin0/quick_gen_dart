@@ -25,20 +25,21 @@ class DataClassGenerator {
   }
 
   String _getGeneratedToString() {
-    final StringBuffer sb = StringBuffer();
+    final StringBuffer contentBuffer = StringBuffer();
 
     for (int i = 0; i < inputs.length - 1; i++) {
       final String? variableName = inputs[i][VARIABLE_NAME];
-      sb.write(ExpressionHelpers.getColonSeparatedVariableEndingWithComma(
-          variableName: variableName ?? ""));
+      contentBuffer.write(
+          ExpressionHelpers.getColonSeparatedVariableEndingWithComma(
+              variableName: variableName ?? ""));
     }
 
     final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
-    sb.write(ExpressionHelpers.getColonSeparatedVariable(
+    contentBuffer.write(ExpressionHelpers.getColonSeparatedVariable(
         variableName: lastVariableName ?? ""));
 
     return Templates.toStringTemplate(
-        className: className, content: sb.toString());
+        className: className, content: contentBuffer.toString());
   }
 
   String getEquality() {
@@ -49,45 +50,49 @@ class DataClassGenerator {
   }
 
   String _getGeneratesEquality() {
-    final StringBuffer sb = StringBuffer();
-    sb.write(" &&\n");
+    final StringBuffer contentBuffer = StringBuffer();
+    contentBuffer.write(" &&\n");
 
     for (int i = 0; i < inputs.length - 1; i++) {
       final String? variableName = inputs[i][VARIABLE_NAME];
-      sb.write(ExpressionHelpers.getEqualitySeparatedVariableWithAnd(
+      contentBuffer.write(ExpressionHelpers.getEqualitySeparatedVariableWithAnd(
           variableName: variableName ?? ""));
     }
 
     final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
-    sb.write(ExpressionHelpers.getEqualitySeparatedVariable(
+    contentBuffer.write(ExpressionHelpers.getEqualitySeparatedVariable(
         variableName: lastVariableName ?? ""));
     return Templates.toEqualityTemplate(
-        className: className, content: sb.toString());
+        className: className, content: contentBuffer.toString());
   }
 
   String getHashCode() {
     if (inputs.isNotEmpty) {
-      final StringBuffer sb = StringBuffer();
-      sb.write("\n");
-      for (int i = 0; i < inputs.length - 1; i++) {
-        final String? variableName = inputs[i][VARIABLE_NAME];
-        sb.write(ExpressionHelpers.getHashCodeSeparatedVariableWithAnd(
-            variableName: variableName ?? ""));
-      }
-      final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
-      sb.write(ExpressionHelpers.getHashCodeSeparatedVariable(
-          variableName: lastVariableName ?? ""));
-      return Templates.toHashCodeTemplate(
-          className: className, content: sb.toString());
+      return _getGeneratedHashCode();
     }
     return Templates.toHashCodeTemplate(className: className, content: " 0");
+  }
+
+  String _getGeneratedHashCode() {
+    final StringBuffer contentBuffer = StringBuffer();
+    contentBuffer.write("\n");
+    for (int i = 0; i < inputs.length - 1; i++) {
+      final String? variableName = inputs[i][VARIABLE_NAME];
+      contentBuffer.write(ExpressionHelpers.getHashCodeSeparatedVariableWithAnd(
+          variableName: variableName ?? ""));
+    }
+    final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
+    contentBuffer.write(ExpressionHelpers.getHashCodeSeparatedVariable(
+        variableName: lastVariableName ?? ""));
+    return Templates.toHashCodeTemplate(
+        className: className, content: contentBuffer.toString());
   }
 
   String _getConstructor(Constructor constructor) {
     if (inputs.isNotEmpty) {
       return _getGeneratedConstructor(constructor);
     }
-    return Templates.toConstructor(
+    return Templates.toConstructorTemplate(
       className: className,
       content: "",
       shouldAddConst: true,
@@ -95,28 +100,28 @@ class DataClassGenerator {
   }
 
   String _getGeneratedConstructor(Constructor constructor) {
-    final StringBuffer sb = StringBuffer();
+    final StringBuffer contentBuffer = StringBuffer();
     if (constructor == Constructor.DEFAULT) {
-      sb.write("\n");
+      contentBuffer.write("\n");
     } else {
-      sb.write("{\n");
+      contentBuffer.write("{\n");
     }
     for (int i = 0; i < inputs.length; i++) {
       final String? variableName = inputs[i][VARIABLE_NAME];
       if (constructor == Constructor.REQUIRED_OPTIONAL) {
-        sb.write(ExpressionHelpers.getRequiredConstructorWithComma(
+        contentBuffer.write(ExpressionHelpers.getRequiredConstructorWithComma(
             variableName: variableName ?? ""));
       } else {
-        sb.write(ExpressionHelpers.getDefaultConstructorWithComma(
+        contentBuffer.write(ExpressionHelpers.getDefaultConstructorWithComma(
             variableName: variableName ?? ""));
       }
     }
     if (constructor != Constructor.DEFAULT) {
-      sb.write("}");
+      contentBuffer.write("}");
     }
-    return Templates.toConstructor(
+    return Templates.toConstructorTemplate(
       className: className,
-      content: sb.toString(),
+      content: contentBuffer.toString(),
       shouldAddConst: false,
     );
   }
@@ -131,5 +136,39 @@ class DataClassGenerator {
 
   String getRequiredOptionalConstructor() {
     return _getConstructor(Constructor.REQUIRED_OPTIONAL);
+  }
+
+  String getCopyWith() {
+    if (inputs.isNotEmpty) {
+      final StringBuffer parameterBuffer = StringBuffer();
+      final StringBuffer contentBuffer = StringBuffer();
+      parameterBuffer.write("{\n");
+      for (int i = 0; i < inputs.length; i++) {
+        final String? variableName = inputs[i][VARIABLE_NAME];
+        final String? variableType = inputs[i][VARIABLE_TYPE];
+        parameterBuffer
+            .write(ExpressionHelpers.getTypeSeparatedVariableWithComma(
+          variableName: variableName ?? "",
+          variableType: variableType ?? "",
+        ));
+      }
+      parameterBuffer.write("}");
+      contentBuffer.write("\n");
+      for (int i = 0; i < inputs.length; i++) {
+        final String? variableName = inputs[i][VARIABLE_NAME];
+        contentBuffer
+            .write(ExpressionHelpers.getColonSeparatedVariableWithCommaAndNull(
+          variableName: variableName ?? "",
+        ));
+      }
+      contentBuffer.write("\t");
+      return Templates.toCopyWithTemplate(
+        className: className,
+        content: contentBuffer.toString(),
+        parameters: parameterBuffer.toString(),
+      );
+    }
+    return Templates.toCopyWithTemplate(
+        className: className, content: "", parameters: "");
   }
 }

@@ -56,25 +56,37 @@ void main() {
 // ''';
 //     });
 //
-//     test("copyWith Test", () {
-//       const String expectedCopyWith = '''
-// Temp copyWith({
-//   String id,
-//   DateTime age,
-//   int totalUsers,
-//   bool isAdult,
-//   double totalAmount,
-//   num activeUsers,
-// }) => Temp (
-//     id: id ?? this.id,
-//     age: age ?? this.age,
-//     totalUsers: totalUsers ?? this.totalUsers,
-//     isAdult: isAdult ?? this.isAdult,
-//     totalAmount: totalAmount ?? this.totalAmount,
-//     activeUsers: activeUsers ?? this.activeUsers,
-//   );
-// ''';
-//     });
+    test("Empty copyWith Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: []);
+      const String expectedCopyWith = '''
+Temp copyWith() => Temp();''';
+      final String generatedCopyWith = dataClassGenerator.getCopyWith();
+      expect(generatedCopyWith, expectedCopyWith);
+    });
+
+    test("copyWith Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: inputs);
+      const String expectedCopyWith = '''
+Temp copyWith({
+\tDateTime age,
+\tString id,
+\tint totalUsers,
+\tbool isAdult,
+\tdouble totalAmount,
+\tnum activeUsers,
+}) => Temp(
+\t\tage: age ?? this.age,
+\t\tid: id ?? this.id,
+\t\ttotalUsers: totalUsers ?? this.totalUsers,
+\t\tisAdult: isAdult ?? this.isAdult,
+\t\ttotalAmount: totalAmount ?? this.totalAmount,
+\t\tactiveUsers: activeUsers ?? this.activeUsers,
+\t);''';
+      final String generatedCopyWith = dataClassGenerator.getCopyWith();
+      expect(generatedCopyWith, expectedCopyWith);
+    });
   });
 }
 

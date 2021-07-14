@@ -55,4 +55,12 @@ class ExpressionHelpers {
       notEmptyValue: "\tthis.$variableName,\n",
     );
   }
+
+  static String getRequiredConstructorWithComma(
+      {required String variableName}) {
+    return _checkVariableEmpty(
+      variableName: variableName,
+      notEmptyValue: "\t@required this.$variableName,\n",
+    );
+  }
 }

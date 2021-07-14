@@ -101,14 +101,16 @@ class DataClassGenerator {
     } else {
       sb.write("{\n");
     }
-    for (int i = 0; i < inputs.length - 1; i++) {
+    for (int i = 0; i < inputs.length; i++) {
       final String? variableName = inputs[i][VARIABLE_NAME];
-      sb.write(ExpressionHelpers.getDefaultConstructorWithComma(
-          variableName: variableName ?? ""));
+      if (constructor == Constructor.REQUIRED_OPTIONAL) {
+        sb.write(ExpressionHelpers.getRequiredConstructorWithComma(
+            variableName: variableName ?? ""));
+      } else {
+        sb.write(ExpressionHelpers.getDefaultConstructorWithComma(
+            variableName: variableName ?? ""));
+      }
     }
-    final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
-    sb.write(ExpressionHelpers.getDefaultConstructorWithComma(
-        variableName: lastVariableName ?? ""));
     if (constructor != Constructor.DEFAULT) {
       sb.write("}");
     }
@@ -125,5 +127,9 @@ class DataClassGenerator {
 
   String getOptionalConstructor() {
     return _getConstructor(Constructor.OPTIONAL);
+  }
+
+  String getRequiredOptionalConstructor() {
+    return _getConstructor(Constructor.REQUIRED_OPTIONAL);
   }
 }

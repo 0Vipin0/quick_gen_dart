@@ -22,36 +22,9 @@ void main() {
 
     defaultConstructorTests(className, inputs);
 
-    group("Optional Constructor Tests", () {
-      test("Empty Optional Constructor Test", () {
-        final DataClassGenerator dataClassGenerator =
-            DataClassGenerator(className: className, inputs: []);
-        const String expectedDefaultConstructor = '''
-const Temp();''';
+    optionalConstructorTests(className, inputs);
 
-        final String generatedOptionalConstructor =
-            dataClassGenerator.getOptionalConstructor();
-        expect(generatedOptionalConstructor, expectedDefaultConstructor);
-      });
-
-      test("Optional Constructor Test", () {
-        final DataClassGenerator dataClassGenerator =
-            DataClassGenerator(className: className, inputs: inputs);
-        const String expectedDefaultConstructor = '''
-Temp({
-\tthis.age,
-\tthis.id,
-\tthis.totalUsers,
-\tthis.isAdult,
-\tthis.totalAmount,
-\tthis.activeUsers,
-});''';
-
-        final String generatedOptionalConstructor =
-            dataClassGenerator.getOptionalConstructor();
-        expect(generatedOptionalConstructor, expectedDefaultConstructor);
-      });
-    });
+    requiredOptionalConstructorTests(className, inputs);
 
 //     test("fromMap Test", () {
 //       const String expectedFromMap = '''
@@ -102,6 +75,76 @@ Temp({
 //   );
 // ''';
 //     });
+  });
+}
+
+void requiredOptionalConstructorTests(
+    String className, List<Map<String, String>> inputs) {
+  group("Required Optional Constructor Tests", () {
+    test("Empty Required Optional Constructor Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: []);
+      const String expectedRequiredOptionalConstructor = '''
+const Temp();''';
+
+      final String generatedRequiredOptionalConstructor =
+          dataClassGenerator.getRequiredOptionalConstructor();
+      expect(generatedRequiredOptionalConstructor,
+          expectedRequiredOptionalConstructor);
+    });
+
+    test("Required Optional Constructor Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: inputs);
+      const String expectedRequiredOptionalConstructor = '''
+Temp({
+\t@required this.age,
+\t@required this.id,
+\t@required this.totalUsers,
+\t@required this.isAdult,
+\t@required this.totalAmount,
+\t@required this.activeUsers,
+});''';
+
+      final String generatedRequiredOptionalConstructor =
+          dataClassGenerator.getRequiredOptionalConstructor();
+      expect(generatedRequiredOptionalConstructor,
+          expectedRequiredOptionalConstructor);
+    });
+  });
+}
+
+void optionalConstructorTests(
+    String className, List<Map<String, String>> inputs) {
+  group("Optional Constructor Tests", () {
+    test("Empty Optional Constructor Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: []);
+      const String expectedOptionalConstructor = '''
+const Temp();''';
+
+      final String generatedOptionalConstructor =
+          dataClassGenerator.getOptionalConstructor();
+      expect(generatedOptionalConstructor, expectedOptionalConstructor);
+    });
+
+    test("Optional Constructor Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: inputs);
+      const String expectedOptionalConstructor = '''
+Temp({
+\tthis.age,
+\tthis.id,
+\tthis.totalUsers,
+\tthis.isAdult,
+\tthis.totalAmount,
+\tthis.activeUsers,
+});''';
+
+      final String generatedOptionalConstructor =
+          dataClassGenerator.getOptionalConstructor();
+      expect(generatedOptionalConstructor, expectedOptionalConstructor);
+    });
   });
 }
 

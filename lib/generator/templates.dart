@@ -23,4 +23,13 @@ bool operator == (Object other) =>
   (other is Temp &&
   runtimeType == other.runtimeType$content);''';
   }
+
+  static String toHashCodeTemplate({
+    required String className,
+    required String content,
+  }) {
+    return '''
+$OVERRIDE
+int get hashCode =>$content;''';
+  }
 }

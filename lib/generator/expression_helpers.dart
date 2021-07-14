@@ -16,4 +16,13 @@ class ExpressionHelpers {
       {required String variableName}) {
     return "  $variableName == other.$variableName &&\n";
   }
+
+  static String getHashCodeSeparatedVariableWithAnd(
+      {required String variableName}) {
+    return "\t$variableName.hashCode ^\n";
+  }
+
+  static String getHashCodeSeparatedVariable({required String variableName}) {
+    return "\t$variableName.hashCode";
+  }
 }

@@ -58,4 +58,22 @@ class DataClassGenerator {
     return Templates.toEqualityTemplate(
         className: className, content: sb.toString());
   }
+
+  String getHashCode() {
+    if (inputs.isNotEmpty) {
+      final StringBuffer sb = StringBuffer();
+      sb.write("\n");
+      for (int i = 0; i < inputs.length - 1; i++) {
+        final String? variableName = inputs[i][VARIABLE_NAME];
+        sb.write(ExpressionHelpers.getHashCodeSeparatedVariableWithAnd(
+            variableName: variableName ?? ""));
+      }
+      final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
+      sb.write(ExpressionHelpers.getHashCodeSeparatedVariable(
+          variableName: lastVariableName ?? ""));
+      return Templates.toHashCodeTemplate(
+          className: className, content: sb.toString());
+    }
+    return Templates.toHashCodeTemplate(className: className, content: " 0");
+  }
 }

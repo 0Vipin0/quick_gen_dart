@@ -194,4 +194,26 @@ class DataClassGenerator {
     }
     return Templates.toMapTemplate(content: "");
   }
+
+  String getFromMap() {
+    if (inputs.isNotEmpty) {
+      final StringBuffer contentBuffer = StringBuffer();
+      contentBuffer.write("\n");
+      for (int i = 0; i < inputs.length; i++) {
+        final String? variableName = inputs[i][VARIABLE_NAME];
+        final String? variableType = inputs[i][VARIABLE_TYPE];
+        contentBuffer.write(ExpressionHelpers
+            .getColonSeparatedVariableStartingWithTabEndingVariableType(
+          variableName: variableName ?? "",
+          variableType: variableType ?? "",
+        ));
+      }
+      contentBuffer.write("\t");
+      return Templates.toFromMapTemplate(
+        className: className,
+        content: contentBuffer.toString(),
+      );
+    }
+    return Templates.toFromMapTemplate(className: className, content: "");
+  }
 }

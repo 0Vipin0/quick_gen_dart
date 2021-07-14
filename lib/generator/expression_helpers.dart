@@ -98,4 +98,13 @@ class ExpressionHelpers {
       notEmptyValue: "\t\t'$variableName': this.$variableName,\n",
     );
   }
+
+  static String getColonSeparatedVariableStartingWithTabEndingVariableType(
+      {required String variableName, required String variableType}) {
+    return _checkVariableNameAndTypeEmpty(
+        variableName: variableName,
+        variableType: variableType,
+        notEmptyValue:
+            "\t\t$variableName: map['$variableName'] as $variableType,\n");
+  }
 }

@@ -26,24 +26,40 @@ void main() {
 
     requiredOptionalConstructorTests(className, inputs);
 
-//     test("fromMap Test", () {
-//       const String expectedFromMap = '''
-// factory Temp.fromMap(Map<String, dynamic> map) {
-//   return Temp(
-//     id: map['id'] as String,
-//     age: map['age'] as DateTime,
-//     totalUsers: map['totalUsers'] as int,
-//     isAdult: map['isAdult'] as bool,
-//     totalAmount: map['totalAmount'] as double,
-//     activeUsers: map['activeUsers'] as num,
-//    );
-//  }
-// ''';
-//     });
+    fromMapTests(className, inputs);
 
     toMapTests(className, inputs);
 
     copyWithTests(className, inputs);
+  });
+}
+
+void fromMapTests(String className, List<Map<String, String>> inputs) {
+  group("fromMap Tests", () {
+    test("Empty fromMap Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: []);
+      const String expectedFromMap = '''
+factory Temp.fromMap(Map<String, dynamic> map) => Temp();''';
+      final String generatedFromMap = dataClassGenerator.getFromMap();
+      expect(generatedFromMap, expectedFromMap);
+    });
+
+    test("fromMap Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: inputs);
+      const String expectedFromMap = '''
+factory Temp.fromMap(Map<String, dynamic> map) => Temp(
+\t\tage: map['age'] as DateTime,
+\t\tid: map['id'] as String,
+\t\ttotalUsers: map['totalUsers'] as int,
+\t\tisAdult: map['isAdult'] as bool,
+\t\ttotalAmount: map['totalAmount'] as double,
+\t\tactiveUsers: map['activeUsers'] as num,
+\t);''';
+      final String generatedFromMap = dataClassGenerator.getFromMap();
+      expect(generatedFromMap, expectedFromMap);
+    });
   });
 }
 
@@ -53,7 +69,7 @@ void toMapTests(String className, List<Map<String, String>> inputs) {
       final DataClassGenerator dataClassGenerator =
           DataClassGenerator(className: className, inputs: []);
       const String expectedToMap = '''
-  Map<String, dynamic> toMap() => <String, dynamic>{};''';
+Map<String, dynamic> toMap() => <String, dynamic>{};''';
       final String generatedToMap = dataClassGenerator.getToMap();
       expect(generatedToMap, expectedToMap);
     });
@@ -62,14 +78,14 @@ void toMapTests(String className, List<Map<String, String>> inputs) {
       final DataClassGenerator dataClassGenerator =
           DataClassGenerator(className: className, inputs: inputs);
       const String expectedToMap = '''
-  Map<String, dynamic> toMap() => <String, dynamic>{
-  \t\t'age': this.age,
-  \t\t'id': this.id,
-  \t\t'totalUsers': this.totalUsers,
-  \t\t'isAdult': this.isAdult,
-  \t\t'totalAmount': this.totalAmount,
-  \t\t'activeUsers': this.activeUsers,
-  \t};''';
+Map<String, dynamic> toMap() => <String, dynamic>{
+\t\t'age': this.age,
+\t\t'id': this.id,
+\t\t'totalUsers': this.totalUsers,
+\t\t'isAdult': this.isAdult,
+\t\t'totalAmount': this.totalAmount,
+\t\t'activeUsers': this.activeUsers,
+\t};''';
       final String generatedToMap = dataClassGenerator.getToMap();
       expect(generatedToMap, expectedToMap);
     });
@@ -316,131 +332,3 @@ String toString() {
     });
   });
 }
-
-// class Temp {
-//   DateTime age;
-//   String id;
-//   int totalUsers;
-//   bool isAdult;
-//   double totalAmount;
-//   num activeUsers;
-//
-// //<editor-fold desc="Data Methods" defaultstate="collapsed">
-//
-//   Temp({
-//     @required this.age,
-//     @required this.id,
-//     @required this.totalUsers,
-//     @required this.isAdult,
-//     @required this.totalAmount,
-//     @required this.activeUsers,
-//   });
-//
-//   Temp copyWith({
-//     DateTime age,
-//     String id,
-//     int totalUsers,
-//     bool isAdult,
-//     double totalAmount,
-//     num activeUsers,
-//   }) {
-//     return new Temp(
-//       age: age ?? this.age,
-//       id: id ?? this.id,
-//       totalUsers: totalUsers ?? this.totalUsers,
-//       isAdult: isAdult ?? this.isAdult,
-//       totalAmount: totalAmount ?? this.totalAmount,
-//       activeUsers: activeUsers ?? this.activeUsers,
-//     );
-//   }
-//
-//   @override
-//   String toString() {
-//     return 'Temp{age: $age, id: $id, totalUsers: $totalUsers, isAdult: $isAdult, totalAmount: $totalAmount, activeUsers: $activeUsers}';
-//   }
-//
-//   @override
-//   bool operator ==(Object other) =>
-//       identical(this, other) ||
-//       (other is Temp &&
-//           runtimeType == other.runtimeType &&
-//           age == other.age &&
-//           id == other.id &&
-//           totalUsers == other.totalUsers &&
-//           isAdult == other.isAdult &&
-//           totalAmount == other.totalAmount &&
-//           activeUsers == other.activeUsers);
-//
-//   @override
-//   int get hashCode =>
-//       age.hashCode ^
-//       id.hashCode ^
-//       totalUsers.hashCode ^
-//       isAdult.hashCode ^
-//       totalAmount.hashCode ^
-//       activeUsers.hashCode;
-//
-//   factory Temp.fromMap(Map<String, dynamic> map) {
-//     return new Temp(
-//       age: map['age'] as DateTime,
-//       id: map['id'] as String,
-//       totalUsers: map['totalUsers'] as int,
-//       isAdult: map['isAdult'] as bool,
-//       totalAmount: map['totalAmount'] as double,
-//       activeUsers: map['activeUsers'] as num,
-//     );
-//   }
-//
-//   Map<String, dynamic> toMap() {
-//     // ignore: unnecessary_cast
-//     return {
-//       'age': this.age,
-//       'id': this.id,
-//       'totalUsers': this.totalUsers,
-//       'isAdult': this.isAdult,
-//       'totalAmount': this.totalAmount,
-//       'activeUsers': this.activeUsers,
-//     } as Map<String, dynamic>;
-//   }
-//
-// //</editor-fold>
-//
-// }
-
-// class Temp {
-// //<editor-fold desc="Data Methods" defaultstate="collapsed">
-//   const Temp();
-//
-//   Temp copyWith() {
-//     if (true) {
-//       return this;
-//     }
-//
-//     return new Temp();
-//   }
-//
-//   @override
-//   String toString() {
-//     return 'Temp{}';
-//   }
-//
-//   @override
-//   bool operator ==(Object other) =>
-//       identical(this, other) ||
-//       (other is Temp && runtimeType == other.runtimeType);
-//
-//   @override
-//   int get hashCode => 0;
-//
-//   factory Temp.fromMap(Map<String, dynamic> map) {
-//     return new Temp();
-//   }
-//
-//   Map<String, dynamic> toMap() {
-//     // ignore: unnecessary_cast
-//     return {} as Map<String, dynamic>;
-//   }
-//
-// //</editor-fold>
-//
-// }

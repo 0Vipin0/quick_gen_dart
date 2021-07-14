@@ -55,4 +55,10 @@ $className copyWith($parameters) => $className($content);''';
     return '''
 Map<String, dynamic> toMap() => <String, dynamic>{$content};''';
   }
+
+  static String toFromMapTemplate(
+      {required String className, required String content}) {
+    return '''
+factory $className.fromMap(Map<String, dynamic> map) => $className($content);''';
+  }
 }

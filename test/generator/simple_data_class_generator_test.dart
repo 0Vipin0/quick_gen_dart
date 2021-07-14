@@ -79,12 +79,12 @@ Map<String, dynamic> toMap() => <String, dynamic>{};''';
           DataClassGenerator(className: className, inputs: inputs);
       const String expectedToMap = '''
 Map<String, dynamic> toMap() => <String, dynamic>{
-\t\t'age': this.age,
-\t\t'id': this.id,
-\t\t'totalUsers': this.totalUsers,
-\t\t'isAdult': this.isAdult,
-\t\t'totalAmount': this.totalAmount,
-\t\t'activeUsers': this.activeUsers,
+\t\t'age': age,
+\t\t'id': id,
+\t\t'totalUsers': totalUsers,
+\t\t'isAdult': isAdult,
+\t\t'totalAmount': totalAmount,
+\t\t'activeUsers': activeUsers,
 \t};''';
       final String generatedToMap = dataClassGenerator.getToMap();
       expect(generatedToMap, expectedToMap);
@@ -98,7 +98,7 @@ void copyWithTests(String className, List<Map<String, String>> inputs) {
       final DataClassGenerator dataClassGenerator =
           DataClassGenerator(className: className, inputs: []);
       const String expectedCopyWith = '''
-  Temp copyWith() => Temp();''';
+Temp copyWith() => Temp();''';
       final String generatedCopyWith = dataClassGenerator.getCopyWith();
       expect(generatedCopyWith, expectedCopyWith);
     });

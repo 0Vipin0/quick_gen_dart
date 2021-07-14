@@ -95,7 +95,7 @@ class ExpressionHelpers {
       {required String variableName}) {
     return _checkVariableNameEmpty(
       variableName: variableName,
-      notEmptyValue: "\t\t'$variableName': this.$variableName,\n",
+      notEmptyValue: "\t\t'$variableName': $variableName,\n",
     );
   }
 

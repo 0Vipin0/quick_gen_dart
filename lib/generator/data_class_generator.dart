@@ -144,36 +144,67 @@ class DataClassGenerator {
 
   String getCopyWith() {
     if (inputs.isNotEmpty) {
-      final StringBuffer parameterBuffer = StringBuffer();
-      final StringBuffer contentBuffer = StringBuffer();
-      parameterBuffer.write("{\n");
-      for (int i = 0; i < inputs.length; i++) {
-        final String? variableName = inputs[i][VARIABLE_NAME];
-        final String? variableType = inputs[i][VARIABLE_TYPE];
+      return Templates.toCopyWithTemplate(
+        className: className,
+        content: _generateCopyWithContent(),
+        parameters: _generateCopyWithParameters(),
+      );
+    }
+    return Templates.toCopyWithTemplate(
+        className: className, content: "", parameters: "");
+  }
+
+  String _generateCopyWithParameters() {
+    final StringBuffer parameterBuffer = StringBuffer();
+    parameterBuffer.write("{\n");
+    for (int i = 0; i < inputs.length; i++) {
+      final String? variableName = inputs[i][VARIABLE_NAME];
+      final String? variableType = inputs[i][VARIABLE_TYPE];
+      final String? variableSubType = inputs[i][VARIABLE_SUBTYPE];
+      final String? variableSubTypeKey = inputs[i][VARIABLE_SUBTYPE_KEY];
+      final String? variableSubTypeValue = inputs[i][VARIABLE_SUBTYPE_VALUE];
+      if (variableSubType != null ||
+          (variableSubTypeKey != null && variableSubTypeValue != null)) {
+        if (variableType == LIST) {
+          final String mergedVariableType = "$variableType<$variableSubType>";
+          parameterBuffer
+              .write(ExpressionHelpers.getTypeSeparatedVariableEndingWithComma(
+            variableName: variableName ?? "",
+            variableType: mergedVariableType,
+          ));
+        } else if (variableType == MAP) {
+          final String mergedVariableType =
+              "$variableType<$variableSubTypeKey, $variableSubTypeValue>";
+          parameterBuffer
+              .write(ExpressionHelpers.getTypeSeparatedVariableEndingWithComma(
+            variableName: variableName ?? "",
+            variableType: mergedVariableType,
+          ));
+        }
+      } else {
         parameterBuffer
             .write(ExpressionHelpers.getTypeSeparatedVariableEndingWithComma(
           variableName: variableName ?? "",
           variableType: variableType ?? "",
         ));
       }
-      parameterBuffer.write("}");
-      contentBuffer.write("\n");
-      for (int i = 0; i < inputs.length; i++) {
-        final String? variableName = inputs[i][VARIABLE_NAME];
-        contentBuffer.write(
-            ExpressionHelpers.getColonSeparatedVariableEndingWithCommaAndNull(
-          variableName: variableName ?? "",
-        ));
-      }
-      contentBuffer.write("\t");
-      return Templates.toCopyWithTemplate(
-        className: className,
-        content: contentBuffer.toString(),
-        parameters: parameterBuffer.toString(),
-      );
     }
-    return Templates.toCopyWithTemplate(
-        className: className, content: "", parameters: "");
+    parameterBuffer.write("}");
+    return parameterBuffer.toString();
+  }
+
+  String _generateCopyWithContent() {
+    final StringBuffer contentBuffer = StringBuffer();
+    contentBuffer.write("\n");
+    for (int i = 0; i < inputs.length; i++) {
+      final String? variableName = inputs[i][VARIABLE_NAME];
+      contentBuffer.write(
+          ExpressionHelpers.getColonSeparatedVariableEndingWithCommaAndNull(
+        variableName: variableName ?? "",
+      ));
+    }
+    contentBuffer.write("\t");
+    return contentBuffer.toString();
   }
 
   String getToMap() {
@@ -202,11 +233,35 @@ class DataClassGenerator {
       for (int i = 0; i < inputs.length; i++) {
         final String? variableName = inputs[i][VARIABLE_NAME];
         final String? variableType = inputs[i][VARIABLE_TYPE];
-        contentBuffer.write(ExpressionHelpers
-            .getColonSeparatedVariableStartingWithTabEndingVariableType(
-          variableName: variableName ?? "",
-          variableType: variableType ?? "",
-        ));
+        final String? variableSubType = inputs[i][VARIABLE_SUBTYPE];
+        final String? variableSubTypeKey = inputs[i][VARIABLE_SUBTYPE_KEY];
+        final String? variableSubTypeValue = inputs[i][VARIABLE_SUBTYPE_VALUE];
+
+        if (variableSubType != null ||
+            (variableSubTypeKey != null && variableSubTypeValue != null)) {
+          if (variableType == LIST) {
+            final String mergedVariableType = "$variableType<$variableSubType>";
+            contentBuffer.write(ExpressionHelpers
+                .getColonSeparatedVariableStartingWithTabEndingVariableType(
+              variableName: variableName ?? "",
+              variableType: mergedVariableType,
+            ));
+          } else if (variableType == MAP) {
+            final String mergedVariableType =
+                "$variableType<$variableSubTypeKey, $variableSubTypeValue>";
+            contentBuffer.write(ExpressionHelpers
+                .getColonSeparatedVariableStartingWithTabEndingVariableType(
+              variableName: variableName ?? "",
+              variableType: mergedVariableType,
+            ));
+          }
+        } else {
+          contentBuffer.write(ExpressionHelpers
+              .getColonSeparatedVariableStartingWithTabEndingVariableType(
+            variableName: variableName ?? "",
+            variableType: variableType ?? "",
+          ));
+        }
       }
       contentBuffer.write("\t");
       return Templates.toFromMapTemplate(

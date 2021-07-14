@@ -9,12 +9,12 @@ class ExpressionHelpers {
   }
 
   static String getEqualitySeparatedVariable({required String variableName}) {
-    return "  $variableName == other.$variableName";
+    return "\t$variableName == other.$variableName";
   }
 
   static String getEqualitySeparatedVariableWithAnd(
       {required String variableName}) {
-    return "  $variableName == other.$variableName &&\n";
+    return "\t$variableName == other.$variableName &&\n";
   }
 
   static String getHashCodeSeparatedVariableWithAnd(

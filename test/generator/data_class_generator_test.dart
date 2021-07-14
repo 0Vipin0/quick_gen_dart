@@ -18,37 +18,7 @@ void main() {
 
     equalityTests(className, inputs);
 
-    group("hash code Tests", () {
-      test("Empty hash code Test", () {
-        final DataClassGenerator dataClassGenerator =
-            DataClassGenerator(className: className, inputs: []);
-        const String expectedHashCode = '''
-@override
-int get hashCode => 0;''';
-
-        final String generatedHashCode = dataClassGenerator.getHashCode();
-
-        expect(expectedHashCode, generatedHashCode);
-      });
-
-      test("hash code Test", () {
-        final DataClassGenerator dataClassGenerator =
-            DataClassGenerator(className: className, inputs: inputs);
-        const String expectedHashCode = '''
-@override
-int get hashCode =>
-\tage.hashCode ^
-\tid.hashCode ^
-\ttotalUsers.hashCode ^
-\tisAdult.hashCode ^
-\ttotalAmount.hashCode ^
-\tactiveUsers.hashCode;''';
-
-        final String generatedHashCode = dataClassGenerator.getHashCode();
-
-        expect(expectedHashCode, generatedHashCode);
-      });
-    });
+    hashCodeTests(className, inputs);
 
     test("fromMap Test", () {
       const String expectedFromMap = '''
@@ -102,6 +72,40 @@ Temp copyWith({
   });
 }
 
+void hashCodeTests(String className, List<Map<String, String>> inputs) {
+  return group("hash code Tests", () {
+    test("Empty hash code Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: []);
+      const String expectedHashCode = '''
+@override
+int get hashCode => 0;''';
+
+      final String generatedHashCode = dataClassGenerator.getHashCode();
+
+      expect(generatedHashCode, expectedHashCode);
+    });
+
+    test("hash code Test", () {
+      final DataClassGenerator dataClassGenerator =
+          DataClassGenerator(className: className, inputs: inputs);
+      const String expectedHashCode = '''
+@override
+int get hashCode =>
+\tage.hashCode ^
+\tid.hashCode ^
+\ttotalUsers.hashCode ^
+\tisAdult.hashCode ^
+\ttotalAmount.hashCode ^
+\tactiveUsers.hashCode;''';
+
+      final String generatedHashCode = dataClassGenerator.getHashCode();
+
+      expect(generatedHashCode, expectedHashCode);
+    });
+  });
+}
+
 void equalityTests(String className, List<Map<String, String>> inputs) {
   return group("Equality Tests", () {
     test("Empty equality Test", () {
@@ -110,11 +114,11 @@ void equalityTests(String className, List<Map<String, String>> inputs) {
       const String expectedEquality = '''
 @override
 bool operator == (Object other) =>
-identical(this, other) ||
-(other is Temp &&
-runtimeType == other.runtimeType);''';
+\tidentical(this, other) ||
+\t(other is Temp &&
+\truntimeType == other.runtimeType);''';
       final generatedEquality = dataClassGenerator.getEquality();
-      expect(expectedEquality, generatedEquality);
+      expect(generatedEquality, expectedEquality);
     });
 
     test("equality Test", () {
@@ -123,17 +127,17 @@ runtimeType == other.runtimeType);''';
       const String expectedEquality = '''
 @override
 bool operator == (Object other) =>
-identical(this, other) ||
-(other is Temp &&
-runtimeType == other.runtimeType &&
-age == other.age &&
-id == other.id &&
-totalUsers == other.totalUsers &&
-isAdult == other.isAdult &&
-totalAmount == other.totalAmount &&
-activeUsers == other.activeUsers);''';
+\tidentical(this, other) ||
+\t(other is Temp &&
+\truntimeType == other.runtimeType &&
+\tage == other.age &&
+\tid == other.id &&
+\ttotalUsers == other.totalUsers &&
+\tisAdult == other.isAdult &&
+\ttotalAmount == other.totalAmount &&
+\tactiveUsers == other.activeUsers);''';
       final generatedEquality = dataClassGenerator.getEquality();
-      expect(expectedEquality, generatedEquality);
+      expect(generatedEquality, expectedEquality);
     });
   });
 }
@@ -146,11 +150,11 @@ void toStringTests(String className, List<Map<String, String>> inputs) {
       const String expectedToString = '''
 @override
 String toString() {
-  return 'Temp{}';
+\treturn 'Temp{}';
 }''';
       final String generatedToString = dataClassGenerator.getToString();
 
-      expect(expectedToString, generatedToString);
+      expect(generatedToString, expectedToString);
     });
 
     test("Simple toString Test", () {
@@ -161,11 +165,11 @@ String toString() {
       const String expectedToString = '''
 @override
 String toString() {
-  return 'Temp{age: \$age, id: \$id, totalUsers: \$totalUsers, isAdult: \$isAdult, totalAmount: \$totalAmount, activeUsers: \$activeUsers}';
+\treturn 'Temp{age: \$age, id: \$id, totalUsers: \$totalUsers, isAdult: \$isAdult, totalAmount: \$totalAmount, activeUsers: \$activeUsers}';
 }''';
       final String generatedToString = dataClassGenerator.getToString();
 
-      expect(expectedToString, generatedToString);
+      expect(generatedToString, expectedToString);
     });
   });
 }

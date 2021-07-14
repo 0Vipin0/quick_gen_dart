@@ -8,7 +8,7 @@ class Templates {
     return '''
 $OVERRIDE
 String toString() {
-  return '$className{$content}';
+\treturn '$className{$content}';
 }''';
   }
 
@@ -19,9 +19,9 @@ String toString() {
     return '''
 $OVERRIDE
 bool operator == (Object other) =>
-  identical(this, other) ||
-  (other is Temp &&
-  runtimeType == other.runtimeType$content);''';
+\tidentical(this, other) ||
+\t(other is Temp &&
+\truntimeType == other.runtimeType$content);''';
   }
 
   static String toHashCodeTemplate({

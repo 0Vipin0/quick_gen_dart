@@ -32,10 +32,21 @@ void main() {
 
     copyWithTests(className, inputs);
 
-    test("Empty Data Class", () {
-      final DataClassGenerator dataClassGenerator =
-          DataClassGenerator(className: className, inputs: []);
-      const String expectedDataClass = '''
+    emptyDataClassTest(className, inputs);
+
+    requiredOptionalDataClassTest(className, inputs);
+
+    optionalDataClassTest(className, inputs);
+
+    defaultDataClassTest(className, inputs);
+  });
+}
+
+void emptyDataClassTest(String className, List<Map<String, String>> inputs) {
+  test("Empty Data Class", () {
+    final DataClassGenerator dataClassGenerator =
+        DataClassGenerator(className: className, inputs: []);
+    const String expectedDataClass = '''
 class Temp {
 
 const Temp();
@@ -60,16 +71,9 @@ factory Temp.fromMap() => const Temp();
 
 Map<String, dynamic> toMap() => <String, dynamic>{};
 }''';
-      final String generatedDataClass =
-          dataClassGenerator.getDataClass(Constructor.DEFAULT);
-      expect(generatedDataClass, expectedDataClass);
-    });
-
-    requiredOptionalDataClassTest(className, inputs);
-
-    optionalDataClassTest(className, inputs);
-
-    defaultDataClassTest(className, inputs);
+    final String generatedDataClass =
+        dataClassGenerator.getDataClass(Constructor.DEFAULT);
+    expect(generatedDataClass, expectedDataClass);
   });
 }
 

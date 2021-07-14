@@ -32,4 +32,13 @@ bool operator == (Object other) =>
 $OVERRIDE
 int get hashCode =>$content;''';
   }
+
+  static String toConstructor({
+    required String className,
+    required String content,
+    required bool shouldAddConst,
+  }) {
+    return '''
+${shouldAddConst ? "const " : ""}$className($content);''';
+  }
 }

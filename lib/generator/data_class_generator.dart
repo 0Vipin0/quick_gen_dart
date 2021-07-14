@@ -76,4 +76,50 @@ class DataClassGenerator {
     }
     return Templates.toHashCodeTemplate(className: className, content: " 0");
   }
+
+  String _getConstructor(Constructor constructor) {
+    if (inputs.isNotEmpty) {
+      return _getGeneratedConstructor(constructor);
+    }
+    return Templates.toConstructor(
+      className: className,
+      content: "",
+      shouldAddConst: true,
+    );
+  }
+
+  String _getGeneratedConstructor(Constructor constructor) {
+    final StringBuffer sb = StringBuffer();
+    if (constructor == Constructor.DEFAULT) {
+      sb.write("\n");
+    } else {
+      sb.write("{\n");
+    }
+    for (int i = 0; i < inputs.length - 1; i++) {
+      final String? variableName = inputs[i][VARIABLE_NAME];
+      sb.write(ExpressionHelpers.getDefaultConstructorWithComma(
+          variableName: variableName ?? ""));
+    }
+    final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
+    sb.write(ExpressionHelpers.getDefaultConstructorWithComma(
+        variableName: lastVariableName ?? ""));
+    if (constructor != Constructor.DEFAULT) {
+      sb.write("}");
+    }
+    return Templates.toConstructor(
+      className: className,
+      content: sb.toString(),
+      shouldAddConst: false,
+    );
+  }
+
+  String getDefaultConstructor() {
+    return _getConstructor(Constructor.DEFAULT);
+  }
+}
+
+enum Constructor {
+  DEFAULT,
+  OPTIONAL,
+  REQUIRED_OPTIONAL,
 }

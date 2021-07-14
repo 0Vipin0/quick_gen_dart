@@ -20,55 +20,85 @@ void main() {
 
     hashCodeTests(className, inputs);
 
-    test("fromMap Test", () {
-      const String expectedFromMap = '''
-factory Temp.fromMap(Map<String, dynamic> map) {
-  return Temp(
-    id: map['id'] as String,
-    age: map['age'] as DateTime,
-    totalUsers: map['totalUsers'] as int,
-    isAdult: map['isAdult'] as bool,
-    totalAmount: map['totalAmount'] as double,
-    activeUsers: map['activeUsers'] as num,
-   );
- }
-''';
+    group("Default Constructor Tests", () {
+      test("Empty Constructor Test", () {
+        final DataClassGenerator dataClassGenerator =
+            DataClassGenerator(className: className, inputs: []);
+        const String expectedDefaultConstructor = '''
+const Temp();''';
+
+        final String generatedDefaultConstructor =
+            dataClassGenerator.getDefaultConstructor();
+        expect(generatedDefaultConstructor, expectedDefaultConstructor);
+      });
+
+      test("Default Constructor Test", () {
+        final DataClassGenerator dataClassGenerator =
+            DataClassGenerator(className: className, inputs: inputs);
+        const String expectedDefaultConstructor = '''
+Temp(
+\tthis.age,
+\tthis.id,
+\tthis.totalUsers,
+\tthis.isAdult,
+\tthis.totalAmount,
+\tthis.activeUsers,
+);''';
+        final String generatedDefaultConstructor =
+            dataClassGenerator.getDefaultConstructor();
+        expect(generatedDefaultConstructor, expectedDefaultConstructor);
+      });
     });
 
-    test("toMap Test", () {
-      const String expectedToMap = '''
-Map<String, dynamic> toMap() {
-  return <String, dynamic>{
-    'id': this.id,
-    'age': this.age,
-    'totalUsers': this.totalUsers,
-    'isAdult': this.isAdult,
-    'totalAmount': this.totalAmount,
-    'activeUsers': this.activeUsers,
-  };
-}
-''';
-    });
-
-    test("copyWith Test", () {
-      const String expectedCopyWith = '''
-Temp copyWith({
-  String id,
-  DateTime age,
-  int totalUsers,
-  bool isAdult,
-  double totalAmount,
-  num activeUsers,
-}) => Temp (
-    id: id ?? this.id,
-    age: age ?? this.age,
-    totalUsers: totalUsers ?? this.totalUsers,
-    isAdult: isAdult ?? this.isAdult,
-    totalAmount: totalAmount ?? this.totalAmount,
-    activeUsers: activeUsers ?? this.activeUsers,
-  );
-''';
-    });
+//     test("fromMap Test", () {
+//       const String expectedFromMap = '''
+// factory Temp.fromMap(Map<String, dynamic> map) {
+//   return Temp(
+//     id: map['id'] as String,
+//     age: map['age'] as DateTime,
+//     totalUsers: map['totalUsers'] as int,
+//     isAdult: map['isAdult'] as bool,
+//     totalAmount: map['totalAmount'] as double,
+//     activeUsers: map['activeUsers'] as num,
+//    );
+//  }
+// ''';
+//     });
+//
+//     test("toMap Test", () {
+//       const String expectedToMap = '''
+// Map<String, dynamic> toMap() {
+//   return <String, dynamic>{
+//     'id': this.id,
+//     'age': this.age,
+//     'totalUsers': this.totalUsers,
+//     'isAdult': this.isAdult,
+//     'totalAmount': this.totalAmount,
+//     'activeUsers': this.activeUsers,
+//   };
+// }
+// ''';
+//     });
+//
+//     test("copyWith Test", () {
+//       const String expectedCopyWith = '''
+// Temp copyWith({
+//   String id,
+//   DateTime age,
+//   int totalUsers,
+//   bool isAdult,
+//   double totalAmount,
+//   num activeUsers,
+// }) => Temp (
+//     id: id ?? this.id,
+//     age: age ?? this.age,
+//     totalUsers: totalUsers ?? this.totalUsers,
+//     isAdult: isAdult ?? this.isAdult,
+//     totalAmount: totalAmount ?? this.totalAmount,
+//     activeUsers: activeUsers ?? this.activeUsers,
+//   );
+// ''';
+//     });
   });
 }
 

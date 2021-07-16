@@ -1,6 +1,6 @@
 import 'package:quick_gen_dart/generator/constants.dart';
 
-class Templates {
+class DataClassTemplates {
   static String toStringTemplate({
     required String className,
     required String content,

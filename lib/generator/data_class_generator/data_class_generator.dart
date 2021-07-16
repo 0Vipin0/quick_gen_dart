@@ -1,6 +1,7 @@
 import 'package:quick_gen_dart/generator/constants.dart';
-import 'package:quick_gen_dart/generator/expression_helpers.dart';
-import 'package:quick_gen_dart/generator/templates.dart';
+
+import 'expression_helpers.dart';
+import 'templates.dart';
 
 enum Constructor {
   DEFAULT,
@@ -21,7 +22,8 @@ class DataClassGenerator {
     if (inputs.isNotEmpty) {
       return _getGeneratedToString();
     }
-    return Templates.toStringTemplate(className: className, content: '');
+    return DataClassTemplates.toStringTemplate(
+        className: className, content: '');
   }
 
   String _getGeneratedToString() {
@@ -38,7 +40,7 @@ class DataClassGenerator {
     contentBuffer.write(ExpressionHelpers.getColonSeparatedVariable(
         variableName: lastVariableName ?? ""));
 
-    return Templates.toStringTemplate(
+    return DataClassTemplates.toStringTemplate(
         className: className, content: contentBuffer.toString());
   }
 
@@ -46,7 +48,8 @@ class DataClassGenerator {
     if (inputs.isNotEmpty) {
       return _getGeneratesEquality();
     }
-    return Templates.toEqualityTemplate(className: className, content: '');
+    return DataClassTemplates.toEqualityTemplate(
+        className: className, content: '');
   }
 
   String _getGeneratesEquality() {
@@ -63,7 +66,7 @@ class DataClassGenerator {
     final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
     contentBuffer.write(ExpressionHelpers.getEqualitySeparatedVariable(
         variableName: lastVariableName ?? ""));
-    return Templates.toEqualityTemplate(
+    return DataClassTemplates.toEqualityTemplate(
         className: className, content: contentBuffer.toString());
   }
 
@@ -71,7 +74,8 @@ class DataClassGenerator {
     if (inputs.isNotEmpty) {
       return _getGeneratedHashCode();
     }
-    return Templates.toHashCodeTemplate(className: className, content: " 0");
+    return DataClassTemplates.toHashCodeTemplate(
+        className: className, content: " 0");
   }
 
   String _getGeneratedHashCode() {
@@ -86,7 +90,7 @@ class DataClassGenerator {
     final String? lastVariableName = inputs[inputs.length - 1][VARIABLE_NAME];
     contentBuffer.write(ExpressionHelpers.getHashCodeSeparatedVariable(
         variableName: lastVariableName ?? ""));
-    return Templates.toHashCodeTemplate(
+    return DataClassTemplates.toHashCodeTemplate(
         className: className, content: contentBuffer.toString());
   }
 
@@ -94,7 +98,7 @@ class DataClassGenerator {
     if (inputs.isNotEmpty) {
       return _getGeneratedConstructor(constructor);
     }
-    return Templates.toConstructorTemplate(
+    return DataClassTemplates.toConstructorTemplate(
       className: className,
       content: "",
       shouldAddConst: true,
@@ -123,7 +127,7 @@ class DataClassGenerator {
     if (constructor != Constructor.DEFAULT) {
       contentBuffer.write("}");
     }
-    return Templates.toConstructorTemplate(
+    return DataClassTemplates.toConstructorTemplate(
       className: className,
       content: contentBuffer.toString(),
       shouldAddConst: false,
@@ -144,14 +148,14 @@ class DataClassGenerator {
 
   String getCopyWith() {
     if (inputs.isNotEmpty) {
-      return Templates.toCopyWithTemplate(
+      return DataClassTemplates.toCopyWithTemplate(
         className: className,
         content: _generateCopyWithContent(),
         parameters: _generateCopyWithParameters(),
         shouldAddConst: false,
       );
     }
-    return Templates.toCopyWithTemplate(
+    return DataClassTemplates.toCopyWithTemplate(
       className: className,
       content: "",
       parameters: "",
@@ -224,11 +228,11 @@ class DataClassGenerator {
         ));
       }
       contentBuffer.write("\t");
-      return Templates.toMapTemplate(
+      return DataClassTemplates.toMapTemplate(
         content: contentBuffer.toString(),
       );
     }
-    return Templates.toMapTemplate(content: "");
+    return DataClassTemplates.toMapTemplate(content: "");
   }
 
   String getFromMap() {
@@ -269,13 +273,13 @@ class DataClassGenerator {
         }
       }
       contentBuffer.write("\t");
-      return Templates.toFromMapTemplate(
+      return DataClassTemplates.toFromMapTemplate(
         className: className,
         content: contentBuffer.toString(),
         shouldAddConst: false,
       );
     }
-    return Templates.toFromMapTemplate(
+    return DataClassTemplates.toFromMapTemplate(
       className: className,
       content: "",
       shouldAddConst: true,

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quick_gen_dart/generator/constants.dart';
-import 'package:quick_gen_dart/generator/data_class_generator.dart';
+import 'package:quick_gen_dart/generator/data_class_generator/data_class_generator.dart';
 
 void main() {
   const String className = "Temp";

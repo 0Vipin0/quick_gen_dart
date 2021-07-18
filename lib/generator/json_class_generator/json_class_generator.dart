@@ -31,7 +31,7 @@ class JsonClassGenerator {
     return json.decode(rawJson) as Map<dynamic, dynamic>;
   }
 
-  JsonObjectNode createListJsonNode(Map<dynamic, dynamic> decodedJson) {
+  JsonObjectNode createJsonObjectNode(Map<dynamic, dynamic> decodedJson) {
     final List<dynamic> keysList = decodedJson.keys.toList();
     final List<dynamic> valuesList = decodedJson.values.toList();
     final List<dynamic> nodes = [];
@@ -64,7 +64,7 @@ class JsonClassGenerator {
 
   String getFromJson() {
     final Map<dynamic, dynamic> decodedJson = decodeRawJson();
-    final JsonObjectNode objectNode = createListJsonNode(decodedJson);
+    final JsonObjectNode objectNode = createJsonObjectNode(decodedJson);
     if (objectNode.nodes.isNotEmpty) {
       final StringBuffer contentBuffer = StringBuffer();
       contentBuffer.write("\n");
@@ -73,7 +73,7 @@ class JsonClassGenerator {
           final String listNodeString =
               _handleJsonListNode(objectNode.nodes[i] as JsonListNode);
           contentBuffer.write(listNodeString);
-        } else {
+        } else if (objectNode.nodes[i] is JsonNode) {
           final String jsonNodeString =
               _handleJsonNode(objectNode.nodes[i] as JsonNode);
           contentBuffer.write(jsonNodeString);

@@ -10,3 +10,5 @@ const String VARIABLE_SUBTYPE_VALUE = "variableSubTypeValue";
 const String LIST = "List";
 const String MAP = "Map";
 const String LIST_DYNAMIC = "List<dynamic>";
+const String INTERNAL_LINKED_HASH_MAP =
+    "_InternalLinkedHashMap<String, dynamic>";

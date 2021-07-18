@@ -8,12 +8,17 @@ void main() {
     const String className = "Temp";
     const String rawJson = '''
 {
-  "age": "2021-07-15 11:11:58.324",
-  "id": "0001",
-  "totalUsers": 55,
-  "isAdult": true,
-  "totalAmount": 100.55,
-  "activeUsers": 15
+	"age": "2021-07-15 11:11:58.324",
+	"id": "0001",
+	"totalUsers": 55,
+	"isAdult": true,
+	"totalAmount": 100.55,
+	"activeUsers": 15,
+	"categories": {
+		"age": "2021-07-15 11:11:58.324",
+		"id": "0001",
+		"totalUsers": 55
+	}
 }''';
     final JsonClassGenerator jsonClassGenerator = JsonClassGenerator(
       rawJson: rawJson,
@@ -37,15 +42,17 @@ factory Temp.fromJson(Map<String, dynamic> json) => Temp(
 \t\tisAdult: json['isAdult'] as bool,
 \t\ttotalAmount: json['totalAmount'] as double,
 \t\tactiveUsers: json['activeUsers'] as int,
+\t\tcategories: categories.fromJson(json['categories']),
 \t);''';
     final String generatedFromJson = jsonClassGenerator.getFromJson();
     expect(generatedFromJson, expectedFromJson);
   });
 }
 
+// ignore: long-method
 void createJsonNodesTest(JsonClassGenerator jsonClassGenerator) {
   return test("Create Json Nodes", () {
-    final List<JsonNode> expectedJsonNodes = [
+    final List<dynamic> expectedJsonNodes = [
       JsonNode(
         variableName: "age",
         variableType: "DateTime",
@@ -76,6 +83,26 @@ void createJsonNodesTest(JsonClassGenerator jsonClassGenerator) {
         variableType: "int",
         isPrimitive: true,
       ),
+      JsonObjectNode(
+        className: "categories",
+        nodes: [
+          JsonNode(
+            variableName: "age",
+            variableType: "DateTime",
+            isPrimitive: false,
+          ),
+          JsonNode(
+            variableName: "id",
+            variableType: "String",
+            isPrimitive: true,
+          ),
+          JsonNode(
+            variableName: "totalUsers",
+            variableType: "int",
+            isPrimitive: true,
+          ),
+        ],
+      ),
     ];
     final JsonObjectNode expectedObjectNode = JsonObjectNode(
       className: jsonClassGenerator.className,
@@ -97,7 +124,12 @@ void decodeJsonTest(JsonClassGenerator jsonClassGenerator) {
       "totalUsers": 55,
       "isAdult": true,
       "totalAmount": 100.55,
-      "activeUsers": 15
+      "activeUsers": 15,
+      "categories": {
+        "age": "2021-07-15 11:11:58.324",
+        "id": "0001",
+        "totalUsers": 55,
+      },
     };
     final Map<dynamic, dynamic> decodedJson =
         jsonClassGenerator.decodeRawJson();

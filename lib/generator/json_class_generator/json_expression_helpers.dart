@@ -40,4 +40,11 @@ class JsonExpressionHelpers {
       {required String variableName, required ListDataType listType}) {
     return '''\t\t$variableName: List<${getListDataTypeString(listType)}>.from(json['$variableName'].map((x) => x)),\n''';
   }
+
+  static String getColonSeparatedClassVariable({required String variableName}) {
+    return _checkVariableNameEmpty(
+        variableName: variableName,
+        notEmptyValue:
+            "\t\t$variableName: $variableName.fromJson(json['$variableName']),\n");
+  }
 }

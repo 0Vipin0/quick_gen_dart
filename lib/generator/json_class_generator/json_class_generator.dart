@@ -31,12 +31,21 @@ class JsonClassGenerator {
     return json.decode(rawJson) as Map<dynamic, dynamic>;
   }
 
-  JsonObjectNode createJsonObjectNode(Map<dynamic, dynamic> decodedJson) {
+  JsonObjectNode createJsonObjectNode(
+    Map<dynamic, dynamic> decodedJson,
+    String className,
+  ) {
     final List<dynamic> keysList = decodedJson.keys.toList();
     final List<dynamic> valuesList = decodedJson.values.toList();
     final List<dynamic> nodes = [];
     for (int i = 0; i < keysList.length; i++) {
-      if (valuesList[i].runtimeType.toString() == LIST_DYNAMIC) {
+      if (valuesList[i].runtimeType.toString() == INTERNAL_LINKED_HASH_MAP) {
+        final JsonObjectNode recursiveObjectNode = createJsonObjectNode(
+          valuesList[i] as Map<dynamic, dynamic>,
+          keysList[i] as String,
+        );
+        nodes.add(recursiveObjectNode);
+      } else if (valuesList[i].runtimeType.toString() == LIST_DYNAMIC) {
         final JsonListNode jsonList = isListMergeAble(
           valuesList[i] as List<dynamic>,
           keysList[i] as String,
@@ -64,12 +73,17 @@ class JsonClassGenerator {
 
   String getFromJson() {
     final Map<dynamic, dynamic> decodedJson = decodeRawJson();
-    final JsonObjectNode objectNode = createJsonObjectNode(decodedJson);
+    final JsonObjectNode objectNode =
+        createJsonObjectNode(decodedJson, className);
     if (objectNode.nodes.isNotEmpty) {
       final StringBuffer contentBuffer = StringBuffer();
       contentBuffer.write("\n");
       for (int i = 0; i < objectNode.nodes.length; i++) {
-        if (objectNode.nodes[i] is JsonListNode) {
+        if (objectNode.nodes[i] is JsonObjectNode) {
+          final String objectNodeString =
+              _handleObjectJsonNode(objectNode.nodes[i] as JsonObjectNode);
+          contentBuffer.write(objectNodeString);
+        } else if (objectNode.nodes[i] is JsonListNode) {
           final String listNodeString =
               _handleJsonListNode(objectNode.nodes[i] as JsonListNode);
           contentBuffer.write(listNodeString);
@@ -129,5 +143,15 @@ class JsonClassGenerator {
       // TODO: Handle Warning here
       return "";
     }
+  }
+
+  String _handleObjectJsonNode(JsonObjectNode jsonObjectNode) {
+    final StringBuffer contentBuffer = StringBuffer();
+    final String variableName = jsonObjectNode.className;
+    contentBuffer.write(JsonExpressionHelpers.getColonSeparatedClassVariable(
+      variableName: variableName,
+    ));
+
+    return contentBuffer.toString();
   }
 }

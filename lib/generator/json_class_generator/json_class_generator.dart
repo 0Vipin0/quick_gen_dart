@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:quick_gen_dart/generator/constants.dart';
-import 'package:quick_gen_dart/generator/json_class_generator/data_type_helpers.dart';
-import 'package:quick_gen_dart/generator/json_class_generator/json_expression_helpers.dart';
+import 'package:quick_gen_dart/generator/json_class_generator/helpers/data_type_helpers.dart';
+import 'package:quick_gen_dart/generator/json_class_generator/helpers/json_expression_helpers.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/nodes/json_list_node.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/nodes/json_node.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/nodes/json_object_node.dart';

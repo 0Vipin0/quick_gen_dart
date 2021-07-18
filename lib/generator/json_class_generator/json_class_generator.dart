@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:quick_gen_dart/generator/json_class_generator/data_type_helpers.dart';
+import 'package:quick_gen_dart/generator/json_class_generator/json_expression_helpers.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/json_node.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/templates.dart';
 
@@ -57,11 +58,16 @@ class JsonClassGenerator {
         final String variableName = nodes[i].variableName;
         final String? variableType = nodes[i].variableType as String?;
         if (variableType == "DateTime") {
-          contentBuffer.write(
-              "\t\t$variableName: DateTime.tryParse(json['$variableName']),\n");
+          contentBuffer
+              .write(JsonExpressionHelpers.getColonSeparatedDateTimeVariable(
+            variableName: variableName,
+          ));
         } else {
           contentBuffer.write(
-              "\t\t$variableName: json['$variableName'] as $variableType,\n");
+              JsonExpressionHelpers.getColonSeparatedVariableWithTypeCasting(
+            variableName: variableName,
+            variableType: variableType ?? "",
+          ));
         }
       }
       contentBuffer.write("\t");

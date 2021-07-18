@@ -1,3 +1,5 @@
+// ignore_for_file: long-method
+
 const int CR = 0;
 const int LF = 1;
 const int Control = 2;
@@ -30,21 +32,19 @@ bool _isSurrogate(String str, int pos) {
 }
 
 int _codePointAt(String str, [int? idx]) {
-  if (idx == null) {
-    idx = 0;
-  }
-  var code = str.codeUnitAt(idx);
+  idx ??= 0;
+  final code = str.codeUnitAt(idx);
   if (0xD800 <= code && code <= 0xDBFF && idx < str.length - 1) {
-    var hi = code;
-    var low = str.codeUnitAt(idx + 1);
+    final hi = code;
+    final low = str.codeUnitAt(idx + 1);
     if (0xDC00 <= low && low <= 0xDFFF) {
       return ((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000;
     }
     return hi;
   }
   if (0xDC00 <= code && code <= 0xDFFF && idx >= 1) {
-    var hi = str.codeUnitAt(idx - 1);
-    var low = code;
+    final hi = str.codeUnitAt(idx - 1);
+    final low = code;
     if (0xD800 <= hi && hi <= 0xDBFF) {
       return ((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000;
     }
@@ -66,13 +66,13 @@ int shouldBreak(int start, List<int> mid, int end) {
   final eModifierIndex = all.lastIndexOf(E_Modifier);
   if (eModifierIndex > 1 &&
       all.sublist(1, eModifierIndex).every((c) => c == Extend) &&
-      [Extend, E_Base, E_Base_GAZ].indexOf(start) == -1) {
+      ![Extend, E_Base, E_Base_GAZ].contains(start)) {
     return Break;
   }
-  var rIIndex = all.lastIndexOf(Regional_Indicator);
+  final rIIndex = all.lastIndexOf(Regional_Indicator);
   if (rIIndex > 0 &&
       all.sublist(1, rIIndex).every((c) => c == Regional_Indicator) &&
-      [Prepend, Regional_Indicator].indexOf(previous) == -1) {
+      ![Prepend, Regional_Indicator].contains(previous)) {
     if (all.where((c) => c == Regional_Indicator).length % 2 == 1) {
       return BreakLastRegional;
     } else {
@@ -104,18 +104,18 @@ int shouldBreak(int start, List<int> mid, int end) {
     return NotBreak;
   }
   final previousNonExtendIndex =
-      all.indexOf(Extend) != -1 ? all.lastIndexOf(Extend) - 1 : all.length - 2;
+      all.contains(Extend) ? all.lastIndexOf(Extend) - 1 : all.length - 2;
   if (previousNonExtendIndex != -1 &&
-      [E_Base, E_Base_GAZ].indexOf(all[previousNonExtendIndex]) != -1 &&
+      [E_Base, E_Base_GAZ].contains(all[previousNonExtendIndex]) &&
       all.length > previousNonExtendIndex + 1 &&
       sliceFromEnd(all, previousNonExtendIndex + 1).every((c) => c == Extend) &&
       next == E_Modifier) {
     return NotBreak;
   }
-  if (previous == ZWJ && [Glue_After_Zwj, E_Base_GAZ].indexOf(next) != -1) {
+  if (previous == ZWJ && [Glue_After_Zwj, E_Base_GAZ].contains(next)) {
     return NotBreak;
   }
-  if (mid.indexOf(Regional_Indicator) != -1) {
+  if (mid.contains(Regional_Indicator)) {
     return Break;
   }
   if (previous == Regional_Indicator && next == Regional_Indicator) {
@@ -502,7 +502,7 @@ int getGraphemeBreakProperty(int code) {
       (0xE0100 <= code && code <= 0xE01EF)) {
     return Extend;
   }
-  if ((0x1F1E6 <= code && code <= 0x1F1FF)) {
+  if (0x1F1E6 <= code && code <= 0x1F1FF) {
     return Regional_Indicator;
   }
   if (0x0903 == code ||
@@ -1499,7 +1499,7 @@ int getGraphemeBreakProperty(int code) {
       (0x1F9D1 <= code && code <= 0x1F9DD)) {
     return E_Base;
   }
-  if ((0x1F3FB <= code && code <= 0x1F3FF)) {
+  if (0x1F3FB <= code && code <= 0x1F3FF) {
     return E_Modifier;
   }
   if (0x200D == code) {
@@ -1527,7 +1527,7 @@ int getGraphemeBreakProperty(int code) {
       0x1F692 == code) {
     return Glue_After_Zwj;
   }
-  if ((0x1F466 <= code && code <= 0x1F469)) {
+  if (0x1F466 <= code && code <= 0x1F469) {
     return E_Base_GAZ;
   }
   return Other;
@@ -1535,9 +1535,7 @@ int getGraphemeBreakProperty(int code) {
 
 class GraphemeSplitter {
   int nextBreak(String string, [int? index]) {
-    if (index == null) {
-      index = 0;
-    }
+    index ??= 0;
     if (index < 0) {
       return 0;
     }

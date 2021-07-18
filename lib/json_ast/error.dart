@@ -1,6 +1,9 @@
 import 'dart:core';
 import 'dart:math';
 
+// ignore_for_file: parameter_assignments
+// ignore_for_file: long-parameter-list
+
 class Settings {
   final int extraLines;
   final int tabSize;
@@ -47,7 +50,7 @@ String codeErrorFragment(String input, int linePos, int columnPos,
     [Settings? settings]) {
   final splitter = RegExp(r'\r\n?|\n|\f');
   final lines = input.split(splitter);
-  settings = settings != null ? settings : Settings();
+  settings = settings ?? Settings();
   final startLinePos = max(1, linePos - settings.extraLines) - 1;
   final endLinePos = min(linePos + settings.extraLines, lines.length);
   final maxNumLength = endLinePos.toString().length;
@@ -62,6 +65,7 @@ String codeErrorFragment(String input, int linePos, int columnPos,
   final nextLines =
       printLines(lines, linePos, endLinePos, maxNumLength, settings);
 
+  // ignore: unrelated_type_equality_checks
   return [prevLines, cursorLine, nextLines].where((c) => c != 0).join('\n');
 }
 

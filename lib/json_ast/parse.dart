@@ -7,6 +7,7 @@ import './tokenize.dart';
 import './utils/substring.dart';
 
 // ignore_for_file: parameter_assignments
+// ignore_for_file: long-method
 
 enum _ObjectState { _START_, OPEN_OBJECT, PROPERTY, COMMA }
 

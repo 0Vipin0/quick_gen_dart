@@ -9,3 +9,4 @@ const String VARIABLE_SUBTYPE_KEY = "variableSubTypeKey";
 const String VARIABLE_SUBTYPE_VALUE = "variableSubTypeValue";
 const String LIST = "List";
 const String MAP = "Map";
+const String LIST_DYNAMIC = "List<dynamic>";

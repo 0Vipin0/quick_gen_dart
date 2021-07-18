@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/json_class_generator.dart';
+import 'package:quick_gen_dart/generator/json_class_generator/json_list.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/json_node.dart';
 
 void main() {
@@ -12,7 +13,12 @@ void main() {
   "totalUsers": 55,
   "isAdult": true,
   "totalAmount": 100.55,
-  "activeUsers": 15
+  "activeUsers": 15,
+  "categories": [
+    "Pop",
+    "Heavy Metal",
+    "Power Bass"
+  ]
 }''';
     final JsonClassGenerator jsonClassGenerator = JsonClassGenerator(
       rawJson: rawJson,
@@ -36,6 +42,7 @@ factory Temp.fromJson(Map<String, dynamic> json) => Temp(
 \t\tisAdult: json['isAdult'] as bool,
 \t\ttotalAmount: json['totalAmount'] as double,
 \t\tactiveUsers: json['activeUsers'] as int,
+\t\tcategories: List<String>.from(json['categories'].map((x) => x)),
 \t);''';
     final String generatedFromJson = jsonClassGenerator.getFromJson();
     expect(generatedFromJson, expectedFromJson);
@@ -44,7 +51,7 @@ factory Temp.fromJson(Map<String, dynamic> json) => Temp(
 
 void createJsonNodesTest(JsonClassGenerator jsonClassGenerator) {
   return test("Create Json Nodes", () {
-    final List<JsonNode> expectedJsonNodes = [
+    final List<dynamic> expectedJsonNodes = [
       JsonNode(
         variableName: "age",
         variableType: "DateTime",
@@ -75,6 +82,11 @@ void createJsonNodesTest(JsonClassGenerator jsonClassGenerator) {
         variableType: "int",
         isPrimitive: true,
       ),
+      JsonList(
+        variableName: "categories",
+        listType: ListDataType.String,
+        isAmbiguous: false,
+      ),
     ];
     final List<dynamic> generatedJsonNodes =
         jsonClassGenerator.createListJsonNode();
@@ -90,7 +102,8 @@ void decodeJsonTest(JsonClassGenerator jsonClassGenerator) {
       "totalUsers": 55,
       "isAdult": true,
       "totalAmount": 100.55,
-      "activeUsers": 15
+      "activeUsers": 15,
+      "categories": ["Pop", "Heavy Metal", "Power Bass"],
     };
     final Map<dynamic, dynamic> decodedJson =
         jsonClassGenerator.decodeRawJson();

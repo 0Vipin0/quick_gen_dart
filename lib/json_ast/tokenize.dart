@@ -6,6 +6,9 @@ import './tokenize_error_types.dart';
 import './utils/substring.dart';
 
 // ignore_for_file: parameter_assignments
+// ignore_for_file: long-parameter-list
+// ignore_for_file: long-method
+
 enum TokenType {
   LEFT_BRACE, // {
   RIGHT_BRACE, // }

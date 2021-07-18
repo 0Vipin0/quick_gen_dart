@@ -81,8 +81,10 @@ void createJsonNodesTest(JsonClassGenerator jsonClassGenerator) {
       className: jsonClassGenerator.className,
       nodes: expectedJsonNodes,
     );
+    final Map<dynamic, dynamic> decodedJson =
+        jsonClassGenerator.decodeRawJson();
     final JsonObjectNode generatedObjectNode =
-        jsonClassGenerator.createListJsonNode();
+        jsonClassGenerator.createListJsonNode(decodedJson);
     expect(generatedObjectNode.toString(), expectedObjectNode.toString());
   });
 }

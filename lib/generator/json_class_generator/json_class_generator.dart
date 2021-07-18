@@ -31,8 +31,7 @@ class JsonClassGenerator {
     return json.decode(rawJson) as Map<dynamic, dynamic>;
   }
 
-  JsonObjectNode createListJsonNode() {
-    final Map<dynamic, dynamic> decodedJson = decodeRawJson();
+  JsonObjectNode createListJsonNode(Map<dynamic, dynamic> decodedJson) {
     final List<dynamic> keysList = decodedJson.keys.toList();
     final List<dynamic> valuesList = decodedJson.values.toList();
     final List<dynamic> nodes = [];
@@ -64,43 +63,20 @@ class JsonClassGenerator {
   }
 
   String getFromJson() {
-    final JsonObjectNode objectNode = createListJsonNode();
+    final Map<dynamic, dynamic> decodedJson = decodeRawJson();
+    final JsonObjectNode objectNode = createListJsonNode(decodedJson);
     if (objectNode.nodes.isNotEmpty) {
       final StringBuffer contentBuffer = StringBuffer();
       contentBuffer.write("\n");
       for (int i = 0; i < objectNode.nodes.length; i++) {
         if (objectNode.nodes[i] is JsonListNode) {
-          final String? variableName =
-              objectNode.nodes[i].variableName as String?;
-          final ListDataType listType =
-              objectNode.nodes[i].listType as ListDataType;
-          final bool isListAmbiguous = objectNode.nodes[i].isAmbiguous as bool;
-          if (!isListAmbiguous) {
-            contentBuffer.write(
-                JsonExpressionHelpers.getColonSeparatedDynamicListVariable(
-              listType: listType,
-              variableName: variableName ?? "",
-            ));
-          } else {
-            // TODO: Handle Warning here
-          }
+          final String listNodeString =
+              _handleJsonListNode(objectNode.nodes[i] as JsonListNode);
+          contentBuffer.write(listNodeString);
         } else {
-          final String? variableName =
-              objectNode.nodes[i].variableName as String?;
-          final String? variableType =
-              objectNode.nodes[i].variableType as String?;
-          if (variableType == "DateTime") {
-            contentBuffer
-                .write(JsonExpressionHelpers.getColonSeparatedDateTimeVariable(
-              variableName: variableName ?? "",
-            ));
-          } else {
-            contentBuffer.write(
-                JsonExpressionHelpers.getColonSeparatedVariableWithTypeCasting(
-              variableName: variableName ?? "",
-              variableType: variableType ?? "",
-            ));
-          }
+          final String jsonNodeString =
+              _handleJsonNode(objectNode.nodes[i] as JsonNode);
+          contentBuffer.write(jsonNodeString);
         }
       }
       contentBuffer.write("\t");
@@ -116,5 +92,42 @@ class JsonClassGenerator {
       content: "",
       shouldAddConst: true,
     );
+  }
+
+  String _handleJsonNode(JsonNode jsonNode) {
+    final StringBuffer contentBuffer = StringBuffer();
+    final String variableName = jsonNode.variableName;
+    final String? variableType = jsonNode.variableType as String?;
+    if (variableType == "DateTime") {
+      contentBuffer
+          .write(JsonExpressionHelpers.getColonSeparatedDateTimeVariable(
+        variableName: variableName,
+      ));
+    } else {
+      contentBuffer
+          .write(JsonExpressionHelpers.getColonSeparatedVariableWithTypeCasting(
+        variableName: variableName,
+        variableType: variableType ?? "",
+      ));
+    }
+    return contentBuffer.toString();
+  }
+
+  String _handleJsonListNode(JsonListNode jsonListNode) {
+    final StringBuffer contentBuffer = StringBuffer();
+    final String variableName = jsonListNode.variableName;
+    final ListDataType listType = jsonListNode.listType;
+    final bool isListAmbiguous = jsonListNode.isAmbiguous;
+    if (!isListAmbiguous) {
+      contentBuffer
+          .write(JsonExpressionHelpers.getColonSeparatedDynamicListVariable(
+        listType: listType,
+        variableName: variableName,
+      ));
+      return contentBuffer.toString();
+    } else {
+      // TODO: Handle Warning here
+      return "";
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/json_class_generator.dart';
-import 'package:quick_gen_dart/generator/json_class_generator/json_node.dart';
+import 'package:quick_gen_dart/generator/json_class_generator/nodes/json_node.dart';
+import 'package:quick_gen_dart/generator/json_class_generator/nodes/json_object_node.dart';
 
 void main() {
   group("Simple Json Class Generator", () {
@@ -76,9 +77,13 @@ void createJsonNodesTest(JsonClassGenerator jsonClassGenerator) {
         isPrimitive: true,
       ),
     ];
-    final List<dynamic> generatedJsonNodes =
+    final JsonObjectNode expectedObjectNode = JsonObjectNode(
+      className: jsonClassGenerator.className,
+      nodes: expectedJsonNodes,
+    );
+    final JsonObjectNode generatedObjectNode =
         jsonClassGenerator.createListJsonNode();
-    expect(generatedJsonNodes, expectedJsonNodes);
+    expect(generatedObjectNode.toString(), expectedObjectNode.toString());
   });
 }
 

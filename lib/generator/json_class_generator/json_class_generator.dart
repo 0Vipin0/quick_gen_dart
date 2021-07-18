@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:quick_gen_dart/generator/constants.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/data_type_helpers.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/json_expression_helpers.dart';
-import 'package:quick_gen_dart/generator/json_class_generator/json_list.dart';
-import 'package:quick_gen_dart/generator/json_class_generator/json_node.dart';
+import 'package:quick_gen_dart/generator/json_class_generator/nodes/json_list_node.dart';
+import 'package:quick_gen_dart/generator/json_class_generator/nodes/json_node.dart';
+import 'package:quick_gen_dart/generator/json_class_generator/nodes/json_object_node.dart';
 import 'package:quick_gen_dart/generator/json_class_generator/templates.dart';
 
 class JsonClassGenerator {
@@ -30,14 +31,14 @@ class JsonClassGenerator {
     return json.decode(rawJson) as Map<dynamic, dynamic>;
   }
 
-  List<dynamic> createListJsonNode() {
+  JsonObjectNode createListJsonNode() {
     final Map<dynamic, dynamic> decodedJson = decodeRawJson();
     final List<dynamic> keysList = decodedJson.keys.toList();
     final List<dynamic> valuesList = decodedJson.values.toList();
     final List<dynamic> nodes = [];
     for (int i = 0; i < keysList.length; i++) {
       if (valuesList[i].runtimeType.toString() == LIST_DYNAMIC) {
-        final JsonList jsonList = isListMergeAble(
+        final JsonListNode jsonList = isListMergeAble(
           valuesList[i] as List<dynamic>,
           keysList[i] as String,
         );
@@ -56,19 +57,24 @@ class JsonClassGenerator {
         nodes.add(jsonNode);
       }
     }
-    return nodes;
+    return JsonObjectNode(
+      className: className,
+      nodes: nodes,
+    );
   }
 
   String getFromJson() {
-    final List<dynamic> nodes = createListJsonNode();
-    if (nodes.isNotEmpty) {
+    final JsonObjectNode objectNode = createListJsonNode();
+    if (objectNode.nodes.isNotEmpty) {
       final StringBuffer contentBuffer = StringBuffer();
       contentBuffer.write("\n");
-      for (int i = 0; i < nodes.length; i++) {
-        if (nodes[i] is JsonList) {
-          final String? variableName = nodes[i].variableName as String?;
-          final ListDataType listType = nodes[i].listType as ListDataType;
-          final bool isListAmbiguous = nodes[i].isAmbiguous as bool;
+      for (int i = 0; i < objectNode.nodes.length; i++) {
+        if (objectNode.nodes[i] is JsonListNode) {
+          final String? variableName =
+              objectNode.nodes[i].variableName as String?;
+          final ListDataType listType =
+              objectNode.nodes[i].listType as ListDataType;
+          final bool isListAmbiguous = objectNode.nodes[i].isAmbiguous as bool;
           if (!isListAmbiguous) {
             contentBuffer.write(
                 JsonExpressionHelpers.getColonSeparatedDynamicListVariable(
@@ -79,8 +85,10 @@ class JsonClassGenerator {
             // TODO: Handle Warning here
           }
         } else {
-          final String? variableName = nodes[i].variableName as String?;
-          final String? variableType = nodes[i].variableType as String?;
+          final String? variableName =
+              objectNode.nodes[i].variableName as String?;
+          final String? variableType =
+              objectNode.nodes[i].variableType as String?;
           if (variableType == "DateTime") {
             contentBuffer
                 .write(JsonExpressionHelpers.getColonSeparatedDateTimeVariable(

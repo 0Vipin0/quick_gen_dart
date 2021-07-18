@@ -1,4 +1,4 @@
-import 'package:quick_gen_dart/generator/json_class_generator/json_list.dart';
+import 'package:quick_gen_dart/generator/json_class_generator/nodes/json_list_node.dart';
 
 class JsonExpressionHelpers {
   static String _checkVariableNameEmpty(

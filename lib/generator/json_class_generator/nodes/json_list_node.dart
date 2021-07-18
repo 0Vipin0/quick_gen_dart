@@ -1,9 +1,9 @@
-class JsonList {
+class JsonListNode {
   String variableName;
   ListDataType listType;
   bool isAmbiguous;
 
-  JsonList({
+  JsonListNode({
     required this.variableName,
     required this.listType,
     required this.isAmbiguous,
@@ -12,7 +12,7 @@ class JsonList {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is JsonList &&
+      other is JsonListNode &&
           runtimeType == other.runtimeType &&
           variableName == other.variableName &&
           listType == other.listType &&
@@ -36,7 +36,7 @@ enum ListDataType {
   Null,
 }
 
-JsonList isListMergeAble(List<dynamic> unsafeList, String variableName) {
+JsonListNode isListMergeAble(List<dynamic> unsafeList, String variableName) {
   ListDataType t = ListDataType.Null;
   bool isAmbiguous = false;
   unsafeList.forEach((e) {
@@ -54,7 +54,7 @@ JsonList isListMergeAble(List<dynamic> unsafeList, String variableName) {
     }
     t = inferredType ?? ListDataType.Null;
   });
-  return JsonList(
+  return JsonListNode(
     listType: t,
     variableName: variableName,
     isAmbiguous: isAmbiguous,
